@@ -13,10 +13,10 @@ export default {
     dwolla: {
         key: dwollaConfig.key || '',
         webkey: dwollaConfig.webkey || '',
-        secret: dwollaConfig.secret || ''
+        secret: dwollaConfig.secret || '',
+        environment: dwollaConfig.environment || 'sandbox'
     },
     push: {
         key: pushConfig.key || ''
-    },
-    environment: config.environment || 'sandbox'
+    }
 };
