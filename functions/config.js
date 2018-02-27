@@ -17,5 +17,6 @@ export default {
     },
     push: {
         key: pushConfig.key || ''
-    }
+    },
+    environment: config.environment || 'sandbox'
 };
