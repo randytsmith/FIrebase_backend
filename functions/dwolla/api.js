@@ -19,7 +19,7 @@ export function updateToken() {
         };
         return ref.update(updates)
         .then(() => token);
-    })
+    });
 }
 
 export function getAPIClient() {
