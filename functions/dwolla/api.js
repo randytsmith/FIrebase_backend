@@ -6,6 +6,7 @@ const client = new dwolla.Client({
     environment: config.dwolla.environment
 });
 
+// @TODO reuse access token
 export function getAPIClient() {
     return client.auth.client();
 }
