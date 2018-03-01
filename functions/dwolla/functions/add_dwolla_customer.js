@@ -1,5 +1,6 @@
 const ref = require('../../ref');
 const getAPIClient = require('../api');
+
 // @TODO define customerData granually
 /**
  * handles customer_activated event from dwolla
@@ -12,7 +13,7 @@ export default function addDwollaCustomer(userID, customerData) {
         .then(client => {
             // @NOTE just mock call for creating customer for now
             // @TODO change this with real dwolla API request
-            return client.addCustomer(customerData)
+            return client.addCustomer(customerData);
         })
         .then(newCustomer => {
             // @TODO replace id with real id returned from dwolla api response

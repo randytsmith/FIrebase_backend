@@ -2,6 +2,7 @@ const dwolla = require('dwolla-v2');
 const moment = require('moment');
 const config = require('../config');
 const ref = require('../ref');
+
 const client = new dwolla.Client({
     key: config.dwolla.key,
     secret: config.dwolla.secret,
@@ -9,21 +10,20 @@ const client = new dwolla.Client({
 });
 
 export function updateToken() {
-    return client.auth.client()
-    .then(token => {
+    return client.auth.client().then(token => {
         const updates = {
             dwolla_access: {
                 token: token.access_token,
                 timestamp: new Date().valueOf()
             }
         };
-        return ref.update(updates)
-        .then(() => token);
+        return ref.update(updates).then(() => token);
     });
 }
 
 export function getAPIClient() {
-    return ref.child('dwolla_access')
+    return ref
+        .child('dwolla_access')
         .once('value')
         .then(snap => snap.val())
         .then(dwollaAccess => {
