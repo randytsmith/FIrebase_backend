@@ -19,9 +19,16 @@ export default function addDwollaCustomer(userID, customerData) {
             // @TODO replace id with real id returned from dwolla api response
             const customerID = newCustomer.id;
             return Promise.all([
-                ref.child('dwolla').child('customers').child(customerID).set(newCustomer),
-                ref.child('dwolla').child('users^customers').child(userID).set(customerID)
-            ])
-            .then(() => customerID);
+                ref
+                    .child('dwolla')
+                    .child('customers')
+                    .child(customerID)
+                    .set(newCustomer),
+                ref
+                    .child('dwolla')
+                    .child('users^customers')
+                    .child(userID)
+                    .set(customerID)
+            ]).then(() => customerID);
         });
 }
