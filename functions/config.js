@@ -1,4 +1,5 @@
 const functions = require('firebase-functions');
+
 const config = functions.config();
 
 const gmailConfig = config.gmail || {};
@@ -14,7 +15,8 @@ export default {
         key: dwollaConfig.key || '',
         webkey: dwollaConfig.webkey || '',
         secret: dwollaConfig.secret || '',
-        environment: dwollaConfig.environment || 'sandbox'
+        environment: dwollaConfig.environment || 'sandbox',
+        webhook: dwollaConfig.webhook || ''
     },
     push: {
         key: pushConfig.key || ''
