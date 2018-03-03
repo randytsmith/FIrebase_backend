@@ -1,6 +1,8 @@
 const functions = require('firebase-functions');
 const requestHandler = require('./common/requestHandler');
+const { runJob } = require('./jobs');
 const { startDwollaWebhook: startDwollaWebhookHandler, handleWebhook } = require('./dwolla/webhook');
 
-export const dwollaWebhook = functions.https.onRequest(requestHandler(handleWebhook));
-export const startDwollaWebhook = functions.https.onRequest(requestHandler(startDwollaWebhookHandler));
+exports.dwollaWebhook = functions.https.onRequest(requestHandler(handleWebhook));
+exports.startDwollaWebhook = functions.https.onRequest(requestHandler(startDwollaWebhookHandler));
+exports.doJob = functions.database.ref('/requests/{requestID}').onCreate(runJob);
