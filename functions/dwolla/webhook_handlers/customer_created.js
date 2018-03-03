@@ -5,11 +5,11 @@ const ref = require('../../ref');
  * @param {string} body.resourceId
  * @returns {Promise}
  */
-export default function customerCreatedWebhook(body) {
+function customerCreatedWebhook(body) {
     const customerID = body.resourceId;
 
     return ref
-        .child('dwolla_customer/' + customerID)
+        .child(`dwolla_customer/${customerID}`)
         .once('value')
         .then(snap => snap.val())
         .then(({ uid }) => {
@@ -20,3 +20,5 @@ export default function customerCreatedWebhook(body) {
             return ref.update(updates);
         });
 }
+
+module.exports = customerCreatedWebhook;

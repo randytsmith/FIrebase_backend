@@ -6,7 +6,7 @@ const ref = require('../../ref');
  * @param {string} _links.resource.href customer resource url
  * @returns {Promise}
  */
-export default function customerTransferCompletedWebhook(body) {
+function customerTransferCompletedWebhook(body) {
     const custUrl = body._links.customer.href;
     const customerID = custUrl.substr(custUrl.lastIndexOf('/') + 1);
     const transfer = body.resourceId;
@@ -17,3 +17,5 @@ export default function customerTransferCompletedWebhook(body) {
     };
     return ref.update(updates);
 }
+
+module.exports = customerTransferCompletedWebhook;

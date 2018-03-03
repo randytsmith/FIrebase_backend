@@ -3,7 +3,7 @@
  * @param {(req, res) => Promise} handler
  * @returns {Promise}
  */
-export default function requestHandler(handler) {
+function requestHandler(handler) {
     return (req, res) => {
         return handler(req, res)
             .then(result => {
@@ -17,3 +17,5 @@ export default function requestHandler(handler) {
             });
     };
 }
+
+module.exports = requestHandler;

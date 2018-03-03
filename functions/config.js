@@ -6,7 +6,7 @@ const gmailConfig = config.gmail || {};
 const dwollaConfig = config.dwolla || {};
 const pushConfig = config.push || {};
 
-export default {
+module.exports = {
     gmail: {
         email: gmailConfig.email || '',
         password: gmailConfig.password || ''

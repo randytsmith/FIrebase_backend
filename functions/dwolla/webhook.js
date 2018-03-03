@@ -11,7 +11,7 @@ const webhookHandlers = require('./webhook_handlers');
  * @param {Response} res
  * @returns {Promise}
  */
-export function startDwollaWebhook() {
+function startDwollaWebhook() {
     return getAPIClient.then(client => {
         const params = {
             url: config.dwolla.webhook,
@@ -34,7 +34,7 @@ export function startDwollaWebhook() {
  * @param {Response} res
  * @returns {Promise}
  */
-export function handleWebhook(req) {
+function handleWebhook(req) {
     const signature = req.get('X-Request-Signature-Sha-256');
     const hmac = crypto
         .createHmac('sha256', config.dwolla.webkey)
@@ -54,3 +54,8 @@ export function handleWebhook(req) {
     }
     return Promise.reject(new APIError('Signature did not match', 401));
 }
+
+module.exports = {
+    startDwollaWebhook,
+    handleWebhook
+};

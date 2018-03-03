@@ -17,7 +17,7 @@ const customer_transfer_created = require('./customer_transfer_created');
 const customer_transfer_failed = require('./customer_transfer_failed');
 const customer_transfer_completed = require('./customer_transfer_completed');
 
-export default {
+module.exports = {
     customer_created,
     customer_suspended,
     customer_verified,

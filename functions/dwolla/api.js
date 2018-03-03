@@ -9,7 +9,7 @@ const client = new dwolla.Client({
     environment: config.dwolla.environment
 });
 
-export function updateToken() {
+function updateToken() {
     return client.auth.client().then(token => {
         const updates = {
             dwolla_access: {
@@ -21,7 +21,7 @@ export function updateToken() {
     });
 }
 
-export function getAPIClient() {
+function getAPIClient() {
     return ref
         .child('dwolla_access')
         .once('value')
@@ -42,4 +42,4 @@ export function getAPIClient() {
         });
 }
 
-export default getAPIClient;
+module.exports = getAPIClient;

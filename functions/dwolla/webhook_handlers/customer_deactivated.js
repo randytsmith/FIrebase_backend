@@ -5,7 +5,7 @@ const ref = require('../../ref');
  * @param {string} body.resourceId
  * @returns {Promise}
  */
-export default function customerDeactivatedWebhook(body) {
+function customerDeactivatedWebhook(body) {
     const customerID = body.resourceId;
     const updates = {};
 
@@ -14,3 +14,5 @@ export default function customerDeactivatedWebhook(body) {
     };
     return ref.update(updates);
 }
+
+module.exports = customerDeactivatedWebhook;

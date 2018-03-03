@@ -8,7 +8,7 @@ const getAPIClient = require('../api');
  * @param {Object} customerData
  * @returns {Promise<string>} promise of customerID added
  */
-export default function addDwollaCustomer(userID, customerData) {
+function addDwollaCustomer(userID, customerData) {
     return getAPIClient()
         .then(client => {
             // @NOTE just mock call for creating customer for now
@@ -32,3 +32,5 @@ export default function addDwollaCustomer(userID, customerData) {
             ]).then(() => customerID);
         });
 }
+
+module.exports = addDwollaCustomer;
