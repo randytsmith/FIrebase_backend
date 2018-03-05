@@ -1,9 +1,19 @@
 const add_dwolla_customer = require('./add_dwolla_customer');
+const make_dwolla_transfer = require('./make_dwolla_transfer');
+const add_recurring_transfer = require('./add_recurring_transfer');
+const link_funding_source = require('./link_funding_source');
+const remove_funding_source = require('./remove_funding_source');
+const cancel_recurring_transfer = require('./cancel_recurring_transfer');
 const dwolla_success_test = require('./dwolla_success_test');
 const dwolla_error_test = require('./dwolla_error_test');
 
 module.exports = {
     add_dwolla_customer,
+    make_dwolla_transfer,
+    link_funding_source,
+    add_recurring_transfer,
+    remove_funding_source,
+    cancel_recurring_transfer,
     dwolla_success_test,
     dwolla_error_test
 };

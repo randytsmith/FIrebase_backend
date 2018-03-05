@@ -2,6 +2,14 @@ const dwolla = require('dwolla-v2');
 const moment = require('moment');
 const config = require('../config');
 const ref = require('../ref');
+const plaid = require('plaid')
+
+const plaidClient = new plaid.Client({
+    client_id: config.plaid.client_id,
+    secret: config.plaid.secret,
+    public_key: config.plaid.key,
+    plaidenv: plaid.enviroments.sandbox
+})
 
 const client = new dwolla.Client({
     key: config.dwolla.key,

@@ -11,24 +11,29 @@ const getAPIClient = require('../api');
 function addDwollaCustomer(userID, customerData) {
     return getAPIClient()
         .then(client => {
-            // @NOTE just mock call for creating customer for now
-            // @TODO change this with real dwolla API request
-            return client.addCustomer(customerData);
+            console.log('in add dwolla customer');
+            return client.post('customers', customerData)
+            .then(res => {
+              return res.headers.get('location')});
         })
-        .then(newCustomer => {
-            // @TODO replace id with real id returned from dwolla api response
-            const customerID = newCustomer.id;
+        .then(custUrl => {
+            const customerID = custUrl.substr(custUrl.lastIndexOf('/') + 1);
             return Promise.all([
                 ref
                     .child('dwolla')
                     .child('customers')
                     .child(customerID)
-                    .set(newCustomer),
+                    .set({customerData, href: customerURL, status:"pending"}),
                 ref
                     .child('dwolla')
                     .child('users^customers')
                     .child(userID)
-                    .set(customerID)
+                    .set(customerID),
+                ref
+                    .child('dwolla')
+                    .child('customers^users')
+                    .child(customerID)
+                    .set(userID)
             ]).then(() => customerID);
         });
 }
