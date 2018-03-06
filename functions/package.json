@@ -19,7 +19,8 @@
     "promise": "^8.0.1",
     "request": "^2.83.0",
     "request-promise": "^4.2.2",
-    "secure-compare": "^3.0.1"
+    "secure-compare": "^3.0.1",
+    "plaid": "^2.3.0"
   },
   "devDependencies": {
     "eslint": "^3.19.0",

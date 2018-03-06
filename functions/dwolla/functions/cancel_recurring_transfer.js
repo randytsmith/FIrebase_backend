@@ -8,23 +8,22 @@ const getAPIClient = require('../api');
  * @param {Object} customerData
  * @returns {Promise<string>} promise of customerID added
  */
-function addDwollaCustomer(userID, customerData) {
+function addDwollaCustomer(userID, transferData) {
     return getAPIClient()
         .then(client => {
             console.log('in add dwolla customer');
-            return client.post('customers', customerData)
-             .then(res => {
-                 return res.headers.get('location');
-             });
+            return client.post('customers', customerData);
         })
-        .then(custUrl => {
-            const customerID = custUrl.substr(custUrl.lastIndexOf('/') + 1);
+        .then(newCustomer => {
+            // @TODO replace id with real id returned from dwolla api response
+            const customerURL = newCustomer.headers.get('location');
+            const customerID = customerUrl.substr(customerUrl.lastIndexOf('/') + 1);
             return Promise.all([
                 ref
                     .child('dwolla')
                     .child('customers')
                     .child(customerID)
-                    .set({ customerData, href: custUrl, status: 'pending' }),
+                    .set({customerData, href: customerURL, status:"pending"}),
                 ref
                     .child('dwolla')
                     .child('users^customers')
@@ -39,4 +38,4 @@ function addDwollaCustomer(userID, customerData) {
         });
 }
 
-module.exports = addDwollaCustomer;
+module.exports = cancel_recurring_transfer;

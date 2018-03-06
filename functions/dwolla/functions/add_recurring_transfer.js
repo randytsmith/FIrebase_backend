@@ -5,36 +5,30 @@ const getAPIClient = require('../api');
 /**
  * handles customer_activated event from dwolla
  * @param {string} userID
- * @param {Object} customerData
+ * @param {Object} transferData
  * @returns {Promise<string>} promise of customerID added
  */
-function addDwollaCustomer(userID, customerData) {
+function addDwollaCustomer(userID, transferData) {
     return getAPIClient()
         .then(client => {
-            console.log('in add dwolla customer');
-            return client.post('customers', customerData)
-             .then(res => {
-                 return res.headers.get('location');
-             });
+            // @NOTE just mock call for creating customer for now
+            // @TODO change this with real dwolla API request
+            return client.addCustomer(customerData);
         })
-        .then(custUrl => {
-            const customerID = custUrl.substr(custUrl.lastIndexOf('/') + 1);
+        .then(newCustomer => {
+            // @TODO replace id with real id returned from dwolla api response
+            const customerID = newCustomer.id;
             return Promise.all([
                 ref
                     .child('dwolla')
                     .child('customers')
                     .child(customerID)
-                    .set({ customerData, href: custUrl, status: 'pending' }),
+                    .set(newCustomer),
                 ref
                     .child('dwolla')
                     .child('users^customers')
                     .child(userID)
-                    .set(customerID),
-                ref
-                    .child('dwolla')
-                    .child('customers^users')
-                    .child(customerID)
-                    .set(userID)
+                    .set(customerID)
             ]).then(() => customerID);
         });
 }
