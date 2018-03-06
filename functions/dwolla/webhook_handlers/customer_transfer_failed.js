@@ -12,9 +12,9 @@ function customerTransferFailedWebhook(body) {
     const transfer = body.resourceId;
     const updates = {};
 
-    updates[`dwolla_transfers/${customerID}/${transfer}`] = {
-        status: 'failed'
-    };
+    updates[`dwolla/customers^transfers/${customerID}/${transfer}/status`] = 'failed';
+    updates[`dwolla/customers^transfers/${customerID}/${transfer}/updated_at`] = -new Date().valueOf();
+
     return ref.update(updates);
 }
 

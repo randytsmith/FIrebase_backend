@@ -12,7 +12,7 @@ const webhookHandlers = require('./webhook_handlers');
  * @returns {Promise}
  */
 function startDwollaWebhook() {
-    return getAPIClient.then(client => {
+    return getAPIClient().then(client => {
         const params = {
             url: config.dwolla.webhook,
             secret: config.dwolla.webkey

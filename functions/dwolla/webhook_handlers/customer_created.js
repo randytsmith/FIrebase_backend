@@ -7,18 +7,10 @@ const ref = require('../../ref');
  */
 function customerCreatedWebhook(body) {
     const customerID = body.resourceId;
-
-    return ref
-        .child(`dwolla_customer/${customerID}`)
-        .once('value')
-        .then(snap => snap.val())
-        .then(({ uid }) => {
-            const updates = {};
-            updates[`customer/${uid}`] = {
-                dwolla_id: customerID || null
-            };
-            return ref.update(updates);
-        });
+    const updates = {};
+    updates[`dwolla/customers/${customerID}/status`] = 'created';
+    updates[`dwolla/customers/${customerID}/balance`] = 0;
+    return ref.update(updates);
 }
 
 module.exports = customerCreatedWebhook;
