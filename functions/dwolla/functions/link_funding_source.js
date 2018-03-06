@@ -1,5 +1,6 @@
 const ref = require('../../ref');
 const getAPIClient = require('../api');
+const getPlaidClient = require('../api');
 
 // @TODO define customerData granually
 /**
@@ -8,12 +9,14 @@ const getAPIClient = require('../api');
  * @param {Object} fundData
  * @returns {Promise<string>} promise of customerID added
  */
-function addDwollaCustomer(userID, fundData) {
-    return getAPIClient()
+function linkFundingSource(userID, fundData) {
+    return getPlaidClient()
         .then(client => {
-            // @NOTE just mock call for creating customer for now
-            // @TODO change this with real dwolla API request
-            return client.addCustomer(customerData);
+            return client.exchangePublicToken(fundData.publicToken)
+            .then(res => {
+                client.exchange()
+            })
+
         })
         .then(newCustomer => {
             // @TODO replace id with real id returned from dwolla api response
@@ -33,4 +36,4 @@ function addDwollaCustomer(userID, fundData) {
         });
 }
 
-module.exports = addDwollaCustomer;
+module.exports = linkFundingSource;

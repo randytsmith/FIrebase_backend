@@ -9,7 +9,7 @@ const plaidClient = new plaid.Client({
     secret: config.plaid.secret,
     public_key: config.plaid.key,
     plaidenv: plaid.enviroments.sandbox
-})
+});
 
 const client = new dwolla.Client({
     key: config.dwolla.key,

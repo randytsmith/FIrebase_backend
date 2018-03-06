@@ -16,12 +16,14 @@ function makeDwollaTransfer(userID, transferData) {
                     .child('users^customers')
                     .child(userID)
                     .once('value')
+                    .then(snap => snap.val())
                     .then(dwollaId => {
                         return ref
                                   .child('dwolla')
                                   .child('customers^dwolla_holding')
                                   .child(dwollaId)
                                   .once('value')
+                                  .then(snap2 => snap2.val())
                                   .then(holdingID => {
                                       return holdingID;
                                   });
@@ -57,7 +59,7 @@ function makeDwollaTransfer(userID, transferData) {
             return ref
                     .child('dwolla')
                     .child('customers^transfers')
-                    .child(transfer.dwollaID)
+                    .child(transfer.dwollaId)
                     .child(transfer.transferId)
                     .set({ amount: transferData.amount, status: 'pending' })
             .then(() => transfer.transferId);
