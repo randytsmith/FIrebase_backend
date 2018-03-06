@@ -9,53 +9,58 @@ const getAPIClient = require('../api');
  * @returns {Promise<string>} promise of customerID added
  */
 function makeDwollaTransfer(userID, transferData) {
-    var custID = ''
     return getAPIClient()
         .then(client => {
-          /** want to
-          1. using uid get dwolla id
-          2. using dwolla id get dwolla holding id
-          Going to send the dwolla id in the request but would still be good
-          to know
-
-          **/
-            const requestBody = {
-              _links: {
-                source: {
-                  href: `https://api-sandbox.dwolla.com/funding-sources/${transferData[fund]}`
-                },
-                destination: {
-                  href: `https://api-sandbox.dwolla.com/funding-sources/${transferData[holding]}`
-                }
-              },
-              amount: {
-                currency: 'USD',
-                value: `${transferData[amount]}`
-              },
-              clearing: {
-                destination: 'next-available',
-                source: 'standard'
-              }
-            };
-            return client.post('transfers', requestBody)
-            .then(res => {
-              const transferUrl = res.headers.get('location');
-              return transferUrl.substr(transferUrl.lastIndexOf('/') + 1)
-            })
-        })
-        .then(transfer => {
-            return Promise.all([
-                ref
-                    .child('dwolla')
-                    .child('transfers')
-                    .child(customerID)
-                    .set(newCustomer),
-                ref
+            return ref
                     .child('dwolla')
                     .child('users^customers')
                     .child(userID)
-                    .set(customerID)
-            ]).then(() => customerID);
+                    .once('value')
+                    .then(dwollaId => {
+                        return ref
+                                  .child('dwolla')
+                                  .child('customers^dwolla_holding')
+                                  .child(dwollaId)
+                                  .once('value')
+                                  .then(holdingID => {
+                                      return holdingID;
+                                  });
+                    })
+                    .then(IDs => {
+                        const requestBody = {
+                            _links: {
+                                source: {
+                                    href: `https://api-sandbox.dwolla.com/funding-sources/${transferData.fund}`
+                                },
+                                destination: {
+                                    href: `https://api-sandbox.dwolla.com/funding-sources/${IDs.holdingID}`
+                                }
+                            },
+                            amount: {
+                                currency: 'USD',
+                                value: transferData.amount
+                            },
+                            clearing: {
+                                destination: 'next-available',
+                                source: 'standard'
+                            }
+                        };
+                        return client.post('transfers', requestBody)
+                        .then(res => {
+                            const transferUrl = res.headers.get('location');
+                            const transferId = transferUrl.substr(transferUrl.lastIndexOf('/') + 1);
+                            return transferId;
+                        });
+                    });
+        })
+        .then(transfer => {
+            return ref
+                    .child('dwolla')
+                    .child('customers^transfers')
+                    .child(transfer.dwollaID)
+                    .child(transfer.transferId)
+                    .set({ amount: transferData.amount, status: 'pending' })
+            .then(() => transfer.transferId);
         });
 }
 

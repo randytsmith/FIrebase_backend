@@ -32,7 +32,6 @@ function runJob(event) {
     const request = event.data.val();
     const key = event.params.requestID;
     const name = request.name;
-    const uid = request.uid;
     console.log(`Got request(${key}): ${name}`);
     console.log('Parameters: ', request.parameters);
     console.log(jobs)

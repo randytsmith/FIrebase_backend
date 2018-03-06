@@ -2,7 +2,7 @@ const dwolla = require('dwolla-v2');
 const moment = require('moment');
 const config = require('../config');
 const ref = require('../ref');
-const plaid = require('plaid')
+const plaid = require('plaid');
 
 const plaidClient = new plaid.Client({
     client_id: config.plaid.client_id,
@@ -29,6 +29,10 @@ function updateToken() {
     });
 }
 
+function getPlaidClient() {
+    return plaidClient;
+}
+
 function getAPIClient() {
     return ref
         .child('dwolla_access')
@@ -50,4 +54,7 @@ function getAPIClient() {
         });
 }
 
-module.exports = getAPIClient;
+module.exports = {
+    getAPIClient,
+    getPlaidClient
+};

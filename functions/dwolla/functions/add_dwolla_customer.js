@@ -13,8 +13,9 @@ function addDwollaCustomer(userID, customerData) {
         .then(client => {
             console.log('in add dwolla customer');
             return client.post('customers', customerData)
-            .then(res => {
-              return res.headers.get('location')});
+             .then(res => {
+                 return res.headers.get('location');
+             });
         })
         .then(custUrl => {
             const customerID = custUrl.substr(custUrl.lastIndexOf('/') + 1);
@@ -23,7 +24,7 @@ function addDwollaCustomer(userID, customerData) {
                     .child('dwolla')
                     .child('customers')
                     .child(customerID)
-                    .set({customerData, href: customerURL, status:"pending"}),
+                    .set({ customerData, href: custUrl, status: 'pending' }),
                 ref
                     .child('dwolla')
                     .child('users^customers')
