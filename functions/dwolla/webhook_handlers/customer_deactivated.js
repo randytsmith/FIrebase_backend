@@ -8,10 +8,7 @@ const ref = require('../../ref');
 function customerDeactivatedWebhook(body) {
     const customerID = body.resourceId;
     const updates = {};
-
-    updates[`dwolla_customer/${customerID}`] = {
-        status: 'deactivated'
-    };
+    updates[`dwolla/customers/${customerID}/status`] = 'deactivated';
     return ref.update(updates);
 }
 

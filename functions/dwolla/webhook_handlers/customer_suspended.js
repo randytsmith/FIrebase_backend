@@ -8,10 +8,7 @@ const ref = require('../../ref');
 function customerSuspendedWebhook(body) {
     const customerID = body.resourceId;
     const updates = {};
-
-    updates[`dwolla_customer/${customerID}`] = {
-        status: 'suspended'
-    };
+    updates[`dwolla/customers/${customerID}/status`] = 'suspended';
     return ref.update(updates);
 }
 

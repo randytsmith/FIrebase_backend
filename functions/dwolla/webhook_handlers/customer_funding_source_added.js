@@ -9,12 +9,10 @@ const ref = require('../../ref');
 function customerFundingSourceAddedWebhook(body) {
     const custUrl = body._links.customer.href;
     const customerID = custUrl.substr(custUrl.lastIndexOf('/') + 1);
-    const fund = body.resourceId;
+    const fundID = body.resourceId;
     const updates = {};
 
-    updates[`dwolla_fund_source/${fund}`] = {
-        status: 'removed'
-    };
+    updates[`dwolla/customers^funding_source/${customerID}/${fundID}/status`] = 'created';
     return ref.update(updates);
 }
 

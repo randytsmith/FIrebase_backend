@@ -9,12 +9,11 @@ const ref = require('../../ref');
 function customerBankTransferCancelledWebhook(body) {
     const custUrl = body._links.customer.href;
     const customerID = custUrl.substr(custUrl.lastIndexOf('/') + 1);
-    const transfer = body.resourceId;
+    const transferID = body.resourceId;
     const updates = {};
 
-    updates[`dwolla_transfers/${customerID}/${transfer}`] = {
-        status: 'cancelled'
-    };
+    updates[`dwolla/customers^bank_transfers/${customerID}/${transferID}/status`] = 'failed';
+    updates[`dwolla/customers^bank_transfers/${customerID}/${transferID}/updated_at`] = -new Date().valueOf();
     return ref.update(updates);
 }
 

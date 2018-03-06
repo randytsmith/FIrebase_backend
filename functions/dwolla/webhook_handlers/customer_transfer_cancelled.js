@@ -13,9 +13,8 @@ function customerTransferCancelledWebhook(body) {
     const transfer = body.resourceId;
     const updates = {};
 
-    updates[`dwolla_transfers/${customerID}/${transfer}`] = {
-        status: 'cancelled'
-    };
+    updates[`dwolla/customers^transfers/${customerID}/${transfer}/status`] = 'cancelled';
+    updates[`dwolla/customers^transfers/${customerID}/${transfer}/updated_at`] = -new Date().valueOf();
     return ref.update(updates);
 }
 

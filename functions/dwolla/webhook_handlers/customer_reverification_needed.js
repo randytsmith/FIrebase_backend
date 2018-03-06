@@ -8,10 +8,7 @@ const ref = require('../../ref');
 function customerReverificationNeededWebhook(body) {
     const customerID = body.resourceId;
     const updates = {};
-
-    updates[`dwolla_customer/${customerID}`] = {
-        status: 'reverification'
-    };
+    updates[`dwolla/customers/${customerID}/status`] = 'reverification';
     return ref.update(updates);
 }
 

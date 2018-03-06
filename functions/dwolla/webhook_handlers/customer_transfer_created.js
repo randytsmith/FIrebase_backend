@@ -12,9 +12,9 @@ function customerTransferCreatedWebhook(body) {
     const transfer = body.resourceId;
     const updates = {};
 
-    updates[`dwolla_transfers/${customerID}/${transfer}`] = {
-        status: 'pending'
-    };
+    updates[`dwolla/customers^transfers/${customerID}/${transfer}/status`] = 'pending';
+    updates[`dwolla/customers^transfers/${customerID}/${transfer}/created_at`] = -new Date().valueOf();
+    updates[`dwolla/customers^transfers/${customerID}/${transfer}/updated_at`] = -new Date().valueOf();
     return ref.update(updates);
 }
 
