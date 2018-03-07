@@ -1,7 +1,7 @@
 const crypto = require('crypto');
 const APIError = require('../common/ApiError');
 const config = require('../config');
-const getAPIClient = require('./api');
+const { getAPIClient } = require('./api');
 const ref = require('../ref');
 const webhookHandlers = require('./webhook_handlers');
 
