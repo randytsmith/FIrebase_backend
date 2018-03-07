@@ -1,41 +1,22 @@
 const ref = require('../../ref');
-const getAPIClient = require('../api');
+const { getCustomerID, getRecurringTransferProcessDate } = require('../utils');
 
-// @TODO define customerData granually
 /**
- * handles customer_activated event from dwolla
+ * subscribes user from recurring transfer
  * @param {string} userID
- * @param {Object} customerData
- * @returns {Promise<string>} promise of customerID added
+ * @returns {Promise<string>}
  */
-function addDwollaCustomer(userID, transferData) {
-    return getAPIClient()
-        .then(client => {
-            console.log('in add dwolla customer');
-            return client.post('customers', customerData);
-        })
-        .then(newCustomer => {
-            // @TODO replace id with real id returned from dwolla api response
-            const customerURL = newCustomer.headers.get('location');
-            const customerID = customerUrl.substr(customerUrl.lastIndexOf('/') + 1);
-            return Promise.all([
-                ref
-                    .child('dwolla')
-                    .child('customers')
-                    .child(customerID)
-                    .set({customerData, href: customerURL, status:"pending"}),
-                ref
-                    .child('dwolla')
-                    .child('users^customers')
-                    .child(userID)
-                    .set(customerID),
-                ref
-                    .child('dwolla')
-                    .child('customers^users')
-                    .child(customerID)
-                    .set(userID)
-            ]).then(() => customerID);
+function cancelRecurringTransfer(userID) {
+    return getCustomerID(userID).then(customerID => {
+        return getRecurringTransferProcessDate(customerID).then(processDate => {
+            const updates = {};
+
+            updates[`dwolla/recurring_transfers^customers/${processDate}/${customerID}`] = null;
+            updates[`dwolla/customers^recurring_transfers/${customerID}`] = null;
+
+            return ref.update(updates);
         });
+    });
 }
 
-module.exports = cancel_recurring_transfer;
+module.exports = cancelRecurringTransfer;

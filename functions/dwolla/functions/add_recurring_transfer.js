@@ -1,36 +1,26 @@
 const ref = require('../../ref');
-const getAPIClient = require('../api');
+const { getCustomerID } = require('../utils');
 
-// @TODO define customerData granually
 /**
- * handles customer_activated event from dwolla
+ * subscribes user for recurring transfer
  * @param {string} userID
- * @param {Object} transferData
- * @returns {Promise<string>} promise of customerID added
+ * @param {enum["1", "15"]} transferData.process_date
+ * @param {Number} transferData.amount
+ * @param {string} transferData.fund fund source id
+ * @returns {Promise<string>}
  */
-function addDwollaCustomer(userID, transferData) {
-    return getAPIClient()
-        .then(client => {
-            // @NOTE just mock call for creating customer for now
-            // @TODO change this with real dwolla API request
-            return client.addCustomer(customerData);
-        })
-        .then(newCustomer => {
-            // @TODO replace id with real id returned from dwolla api response
-            const customerID = newCustomer.id;
-            return Promise.all([
-                ref
-                    .child('dwolla')
-                    .child('customers')
-                    .child(customerID)
-                    .set(newCustomer),
-                ref
-                    .child('dwolla')
-                    .child('users^customers')
-                    .child(userID)
-                    .set(customerID)
-            ]).then(() => customerID);
-        });
+function addRecurringTransfer(userID, transferData) {
+    return getCustomerID(userID).then(customerID => {
+        const updates = {};
+
+        updates[`dwolla/recurring_transfers^customers/${transferData.process_date}/${customerID}`] = {
+            fund_source_id: transferData.fund,
+            amount: transferData.amount
+        };
+        updates[`dwolla/customers^recurring_transfers/${customerID}`] = transferData.process_date;
+
+        return ref.update(updates);
+    });
 }
 
-module.exports = addDwollaCustomer;
+module.exports = addRecurringTransfer;
