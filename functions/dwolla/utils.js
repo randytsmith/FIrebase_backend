@@ -19,7 +19,38 @@ function getCustomer(customerID) {
         .then(snap => snap.val());
 }
 
+function getCustomerID(userID) {
+    return ref
+        .child('dwolla')
+        .child('users^customers')
+        .child(userID)
+        .once('value')
+        .then(snap => snap.val());
+}
+
+function getRecurringTransferProcessDate(customerID) {
+    return ref
+        .child('dwolla')
+        .child('customers^recurring_transfers')
+        .child(customerID)
+        .once('value')
+        .then(snap => snap.val());
+}
+
+function getRecurringTransferData(customerID, processDate) {
+    return ref
+        .child('dwolla')
+        .child('recurring_transfers^customers')
+        .child(processDate)
+        .child(customerID)
+        .once('value')
+        .then(snap => snap.val());
+}
+
 module.exports = {
     getTransfer,
-    getCustomer
+    getCustomer,
+    getCustomerID,
+    getRecurringTransferProcessDate,
+    getRecurringTransferData
 };

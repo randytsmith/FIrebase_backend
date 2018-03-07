@@ -22,7 +22,8 @@ module.exports = {
         webkey: dwollaConfig.webkey || '',
         secret: dwollaConfig.secret || '',
         environment: dwollaConfig.environment || 'sandbox',
-        webhook: dwollaConfig.webhook || ''
+        webhook: dwollaConfig.webhook || '',
+        url: dwollaConfig.environment === 'production' ? 'https://api.dwolla.com' : 'https://api-sandbox.dwolla.com'
     },
     push: {
         key: pushConfig.key || ''
