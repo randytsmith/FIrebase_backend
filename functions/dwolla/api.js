@@ -7,8 +7,8 @@ const plaid = require('plaid');
 const plaidClient = new plaid.Client({
     client_id: config.plaid.client_id,
     secret: config.plaid.secret,
-    public_key: config.plaid.key
-    // plaidenv: plaid.enviroments.sandbox
+    public_key: config.plaid.key,
+    plaidenv: plaid.environments.sandbox
 });
 
 const client = new dwolla.Client({
