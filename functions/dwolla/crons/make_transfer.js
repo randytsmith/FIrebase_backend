@@ -31,13 +31,21 @@ function makeTransfer(customerID, processDate, transferData) {
                 },
                 clearing: {
                     destination: 'next-available'
-                },
-                correlationId: '8a2cdc8d-629d-4a24-98ac-40b735229fe2'
+                }
             };
 
             return client.post('transfers', requestBody);
         })
-        .then(res => res.headers.get('location'));
+        .then(res => res.headers.get('location'))
+        .then(transferUrl => {
+            return ref
+                .child('dwolla')
+                .child('customers^transfers')
+                .child(customerID)
+                .child(transferUrl)
+                .set({ amount: transferData.amount, status: 'pending' })
+                .then(() => transferUrl);
+        });
 }
 
 /**
