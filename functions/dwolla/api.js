@@ -4,13 +4,6 @@ const config = require('../config');
 const ref = require('../ref');
 const plaid = require('plaid');
 
-const plaidClient = new plaid.Client({
-    client_id: config.plaid.client_id,
-    secret: config.plaid.secret,
-    public_key: config.plaid.key
-    // plaidenv: plaid.enviroments.sandbox
-});
-
 const client = new dwolla.Client({
     key: config.dwolla.key,
     secret: config.dwolla.secret,
@@ -30,6 +23,12 @@ function updateToken() {
 }
 
 function getPlaidClient() {
+    const plaidClient = new plaid.Client({
+        client_id: config.plaid.client_id,
+        secret: config.plaid.secret,
+        public_key: config.plaid.key,
+        plaidenv: plaid.environments.sandbox
+    });
     return plaidClient;
 }
 

@@ -1,7 +1,7 @@
 const crypto = require('crypto');
 const APIError = require('../common/ApiError');
 const config = require('../config');
-const getAPIClient = require('./api');
+const { getAPIClient } = require('./api');
 const ref = require('../ref');
 const webhookHandlers = require('./webhook_handlers');
 
@@ -24,6 +24,36 @@ function startDwollaWebhook() {
                 .child('dwolla')
                 .child('webhook')
                 .set(location);
+        });
+    });
+}
+
+/**
+ * list all webhooks
+ * @param {Request} req
+ * @param {Response} res
+ * @returns {Promise}
+ */
+function listDwollaWebhooks() {
+    return getAPIClient().then(client => {
+        return client.get('webhook-subscriptions').then(response => {
+            console.log(response.body);
+            return response.body;
+        });
+    });
+}
+
+/**
+ * list all webhooks
+ * @param {Request} req
+ * @param {Response} res
+ * @returns {Promise}
+ */
+function removeDwollaWebhook(req) {
+    return getAPIClient().then(client => {
+        return client.delete(`${config.dwolla.url}/webhook-subscriptions/${req.query.webhookID}`).then(response => {
+            console.log(response.body);
+            return response.body;
         });
     });
 }
@@ -57,5 +87,7 @@ function handleWebhook(req) {
 
 module.exports = {
     startDwollaWebhook,
+    listDwollaWebhooks,
+    removeDwollaWebhook,
     handleWebhook
 };

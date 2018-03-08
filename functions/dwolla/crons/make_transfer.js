@@ -1,6 +1,6 @@
 const moment = require('moment');
 const ref = require('../../ref');
-const getAPIClient = require('../api');
+const { getAPIClient } = require('../api');
 const config = require('../../config');
 
 /**
@@ -31,13 +31,21 @@ function makeTransfer(customerID, processDate, transferData) {
                 },
                 clearing: {
                     destination: 'next-available'
-                },
-                correlationId: '8a2cdc8d-629d-4a24-98ac-40b735229fe2'
+                }
             };
 
             return client.post('transfers', requestBody);
         })
-        .then(res => res.headers.get('location'));
+        .then(res => res.headers.get('location'))
+        .then(transferUrl => {
+            return ref
+                .child('dwolla')
+                .child('customers^transfers')
+                .child(customerID)
+                .child(transferUrl)
+                .set({ amount: transferData.amount, status: 'pending' })
+                .then(() => transferUrl);
+        });
 }
 
 /**
@@ -62,14 +70,16 @@ function updateRecurringTransferData(customerID, processDate, data) {
 function runCron(processDate) {
     return ref
         .child('dwolla')
-        .child('recurring_transfers^customerID')
+        .child('recurring_transfers^customers')
         .child(processDate)
         .once('value')
+        .then(snap => snap.val())
         .then(recurringData => {
             const data = recurringData || {};
 
-            return Object.keys(data).reduce((customerID, lastPromise) => {
+            return Object.keys(data).reduce((lastPromise, customerID) => {
                 const transferData = data[customerID];
+                console.log(`making payment for ${customerID} - ${transferData.amount}`);
                 return lastPromise
                     .then(() => {
                         return makeTransfer(customerID, processDate, transferData);
