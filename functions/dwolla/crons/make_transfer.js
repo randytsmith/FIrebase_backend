@@ -1,6 +1,6 @@
 const moment = require('moment');
 const ref = require('../../ref');
-const getAPIClient = require('../api');
+const { getAPIClient } = require('../api');
 const config = require('../../config');
 
 /**
