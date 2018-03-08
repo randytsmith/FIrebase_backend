@@ -65,6 +65,7 @@ function runCron(processDate) {
         .child('recurring_transfers^customerID')
         .child(processDate)
         .once('value')
+        .then(snap => snap.val())
         .then(recurringData => {
             const data = recurringData || {};
 
