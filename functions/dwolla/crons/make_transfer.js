@@ -68,9 +68,11 @@ function runCron(processDate) {
         .then(snap => snap.val())
         .then(recurringData => {
             const data = recurringData || {};
+            console.log(data);
 
             return Object.keys(data).reduce((lastPromise, customerID) => {
                 const transferData = data[customerID];
+                console.log(`making payment for ${customerID} - ${transferData.amount}`);
                 return lastPromise
                     .then(() => {
                         return makeTransfer(customerID, processDate, transferData);
