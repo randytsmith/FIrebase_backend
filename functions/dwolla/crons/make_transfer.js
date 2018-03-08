@@ -68,7 +68,7 @@ function runCron(processDate) {
         .then(recurringData => {
             const data = recurringData || {};
 
-            return Object.keys(data).reduce((customerID, lastPromise) => {
+            return Object.keys(data).reduce((lastPromise, customerID) => {
                 const transferData = data[customerID];
                 return lastPromise
                     .then(() => {
