@@ -12,11 +12,9 @@ const getPlaidClient = require('../api');
 function linkFundingSource(userID, fundData) {
     return getPlaidClient()
         .then(client => {
-            return client.exchangePublicToken(fundData.publicToken)
-            .then(res => {
-                client.exchange()
-            })
-
+            return client.exchangePublicToken(fundData.publicToken).then(res => {
+                client.exchange();
+            });
         })
         .then(newCustomer => {
             // @TODO replace id with real id returned from dwolla api response
