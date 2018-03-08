@@ -62,13 +62,12 @@ function updateRecurringTransferData(customerID, processDate, data) {
 function runCron(processDate) {
     return ref
         .child('dwolla')
-        .child('recurring_transfers^customerID')
+        .child('recurring_transfers^customers')
         .child(processDate)
         .once('value')
         .then(snap => snap.val())
         .then(recurringData => {
             const data = recurringData || {};
-            console.log(data);
 
             return Object.keys(data).reduce((lastPromise, customerID) => {
                 const transferData = data[customerID];
