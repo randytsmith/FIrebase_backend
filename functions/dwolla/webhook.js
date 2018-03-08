@@ -29,6 +29,36 @@ function startDwollaWebhook() {
 }
 
 /**
+ * list all webhooks
+ * @param {Request} req
+ * @param {Response} res
+ * @returns {Promise}
+ */
+function listDwollaWebhooks() {
+    return getAPIClient().then(client => {
+        return client.get('webhook-subscriptions').then(response => {
+            console.log(response.body);
+            return response.body;
+        });
+    });
+}
+
+/**
+ * list all webhooks
+ * @param {Request} req
+ * @param {Response} res
+ * @returns {Promise}
+ */
+function removeDwollaWebhook(req) {
+    return getAPIClient().then(client => {
+        return client.delete(`${config.dwolla.url}/webhook-subscriptions/${req.query.webhookID}`).then(response => {
+            console.log(response.body);
+            return response.body;
+        });
+    });
+}
+
+/**
  * subscribes to dwolla webhook and start listening for it
  * @param {Request} req
  * @param {Response} res
@@ -57,5 +87,7 @@ function handleWebhook(req) {
 
 module.exports = {
     startDwollaWebhook,
+    listDwollaWebhooks,
+    removeDwollaWebhook,
     handleWebhook
 };
