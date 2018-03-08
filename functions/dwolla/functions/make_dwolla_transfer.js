@@ -1,6 +1,7 @@
 const moment = require('moment');
 const ref = require('../../ref');
 const getAPIClient = require('../api');
+const config = require('../../config');
 const { getCustomerID } = require('../utils');
 
 /**
@@ -16,7 +17,7 @@ function makeDwollaTransfer(userID, transferData) {
                 const requestBody = {
                     _links: {
                         source: {
-                            href: `https://api-sandbox.dwolla.com/funding-sources/${transferData.fund}`
+                            href: `${config.dwolla.url}/funding-sources/${transferData.fund}`
                         },
                         destination: {
                             href: `https://api-sandbox.dwolla.com/customers/${customerId}`

@@ -1,5 +1,5 @@
 const ref = require('../../ref');
-const getAPIClient = require('../api');
+const { getAPIClient } = require('../api');
 
 // @TODO define customerData granually
 /**
@@ -12,10 +12,9 @@ function addDwollaCustomer(userID, customerData) {
     return getAPIClient()
         .then(client => {
             console.log('in add dwolla customer');
-            return client.post('customers', customerData)
-             .then(res => {
-                 return res.headers.get('location');
-             });
+            return client.post('customers', customerData).then(res => {
+                return res.headers.get('location');
+            });
         })
         .then(custUrl => {
             const customerID = custUrl.substr(custUrl.lastIndexOf('/') + 1);

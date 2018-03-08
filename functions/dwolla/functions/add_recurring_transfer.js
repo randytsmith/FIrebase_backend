@@ -1,26 +1,33 @@
 const ref = require('../../ref');
-const { getCustomerID } = require('../utils');
+const getAPIClient = require('../api');
 
+// @TODO define customerData granually
 /**
- * subscribes user for recurring transfer
+ * handles customer_activated event from dwolla
  * @param {string} userID
- * @param {enum["1", "15"]} transferData.process_date
- * @param {Number} transferData.amount
- * @param {string} transferData.fund fund source id
- * @returns {Promise<string>}
+ * @param {Object} transferData
+ * @returns {Promise<string>} promise of customerID added
  */
-function addRecurringTransfer(userID, transferData) {
-    return getCustomerID(userID).then(customerID => {
-        const updates = {};
-
-        updates[`dwolla/recurring_transfers^customers/${transferData.process_date}/${customerID}`] = {
-            fund_source_id: transferData.fund,
-            amount: transferData.amount
-        };
-        updates[`dwolla/customers^recurring_transfers/${customerID}`] = transferData.process_date;
-
-        return ref.update(updates);
-    });
+// transferData includes fund, process_date, amount
+function addDwollaCustomer(userID, transferData) {
+    return getAPIClient()
+        .then(client => {})
+        .then(newCustomer => {
+            // @TODO replace id with real id returned from dwolla api response
+            const customerID = newCustomer.id;
+            return Promise.all([
+                ref
+                    .child('dwolla')
+                    .child('customers')
+                    .child(customerID)
+                    .set(newCustomer),
+                ref
+                    .child('dwolla')
+                    .child('users^customers')
+                    .child(userID)
+                    .set(customerID)
+            ]).then(() => customerID);
+        });
 }
 
-module.exports = addRecurringTransfer;
+module.exports = addDwollaCustomer;
