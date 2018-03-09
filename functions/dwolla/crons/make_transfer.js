@@ -2,6 +2,7 @@ const moment = require('moment');
 const ref = require('../../ref');
 const { getAPIClient } = require('../api');
 const config = require('../../config');
+const { getDwollaHolding } = require('../utils');
 
 /**
  * makes recurring transfer
@@ -13,28 +14,34 @@ const config = require('../../config');
 function makeTransfer(customerID, processDate, transferData) {
     return getAPIClient()
         .then(client => {
-            const requestBody = {
-                _links: {
-                    source: {
-                        href: `${config.dwolla.url}/funding-sources/${transferData.fund_source_id}`
-                    },
-                    destination: {
-                        href: `${config.dwolla.url}/customers/${customerID}`
-                    }
-                },
-                amount: {
-                    currency: 'USD',
-                    value: transferData.amount
-                },
-                metadata: {
-                    note: `Recurring capture on ${moment().format('MM/DD/YYYY')}`
-                },
-                clearing: {
-                    destination: 'next-available'
+            return getDwollaHolding(customerID).then(holdingID => {
+                if (!holdingID) {
+                    throw new Error('No dwolla holding account');
                 }
-            };
 
-            return client.post('transfers', requestBody);
+                const requestBody = {
+                    _links: {
+                        source: {
+                            href: `${config.dwolla.url}/funding-sources/${transferData.fund_source_id}`
+                        },
+                        destination: {
+                            href: `${config.dwolla.url}/funding-sources/${holdingID}`
+                        }
+                    },
+                    amount: {
+                        currency: 'USD',
+                        value: transferData.amount
+                    },
+                    metadata: {
+                        note: `Recurring capture on ${moment().format('MM/DD/YYYY')}`
+                    },
+                    clearing: {
+                        destination: 'next-available'
+                    }
+                };
+
+                return client.post('transfers', requestBody);
+            });
         })
         .then(res => res.headers.get('location'))
         .then(transferUrl => {
