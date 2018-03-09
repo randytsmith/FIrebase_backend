@@ -1,6 +1,8 @@
 const ref = require('../../ref');
-const getAPIClient = require('../api');
-const getPlaidClient = require('../api');
+const { getAPIClient } = require('../api');
+const { getPlaidClient } = require('../api');
+const config = require('../../config');
+const { getCustomerID } = require('../utils');
 
 // @TODO define customerData granually
 /**
@@ -10,27 +12,40 @@ const getPlaidClient = require('../api');
  * @returns {Promise<string>} promise of customerID added
  */
 function linkFundingSource(userID, fundData) {
-    return getPlaidClient()
-        .then(client => {
-            return client.exchangePublicToken(fundData.publicToken).then(res => {
-                client.exchange();
+    const acctId = fundData.metaData.account_id;
+    return getCustomerID(userID)
+        .then(customerID => {
+            return getPlaidClient().then(plaid_client => {
+                plaid_client.exchangePublicToken(fundData.publicToken).then(plaid_res1 => {
+                    const access_token = plaid_res1.access_token;
+                    return plaid_client.createProcessorToken(access_token, acctId, 'dwolla').then(plaid_res2 => {
+                        return [plaid_res2.processor_token, customerID];
+                    });
+                });
             });
         })
-        .then(newCustomer => {
-            // @TODO replace id with real id returned from dwolla api response
-            const customerID = newCustomer.id;
-            return Promise.all([
-                ref
-                    .child('dwolla')
-                    .child('customers')
-                    .child(customerID)
-                    .set(newCustomer),
-                ref
-                    .child('dwolla')
-                    .child('users^customers')
-                    .child(userID)
-                    .set(customerID)
-            ]).then(() => customerID);
+        .then(dwolla_info => {
+            return getAPIClient().then(dwolla_client => {
+                const customerId = dwolla_info[1];
+                const customerUrl = `${config.dwolla.url}/customers/${customerId}/funding-sources`;
+                const requestBody = {
+                    plaidToken: dwolla_info[0],
+                    name: fundData.name
+                };
+                return dwolla_client.post(customerUrl, requestBody).then(dwolla_res => {
+                    return [dwolla_res.headers.get('location'), customerId];
+                });
+            });
+        })
+        .then(fundInfo => {
+            const fundId = fundInfo[0].substr(fundInfo[0].lastIndexOf('/') + 1);
+            return ref
+                .child('dwolla')
+                .child('customers^')
+                .child(fundInfo[1])
+                .child(fundId)
+                .set({ status: 'pending' })
+                .then(() => fundId);
         });
 }
 

@@ -1,6 +1,6 @@
 const moment = require('moment');
 const ref = require('../../ref');
-const getAPIClient = require('../api');
+const { getAPIClient } = require('../api');
 const config = require('../../config');
 const { getCustomerID } = require('../utils');
 
@@ -52,14 +52,5 @@ function makeDwollaTransfer(userID, transferData) {
                 .then(() => transfer[1]);
         });
 }
-// return ref
-//     .child('dwolla')
-//     .child('customers^dwolla_holding')
-//     .child(dwollaId)
-//     .once('value')
-//     .then(snap2 => snap2.val())
-//     .then(holdingID => {
-//         return [dwollaId, holdingID];
-//     });
 
 module.exports = makeDwollaTransfer;

@@ -1,5 +1,7 @@
 const ref = require('../../ref');
-const getAPIClient = require('../api');
+const { getAPIClient } = require('../api');
+const { getCustomerID } = require('../utils');
+const config = require('../../config');
 
 // @TODO define customerData granually
 /**
@@ -8,29 +10,22 @@ const getAPIClient = require('../api');
  * @param {Object} fundData
  * @returns {Promise<string>} promise of customerID added
  */
-function addDwollaCustomer(userID, fundData) {
+function removeFundingSource(userID, fundData) {
     return getAPIClient()
         .then(client => {
-            // @NOTE just mock call for creating customer for now
-            // @TODO change this with real dwolla API request
-            return client.addCustomer(customerData);
+            const funding_source_url = `${config.dwolla.url}/funding-sources/${fundData.fund}`;
+            const request_body = {
+                removed: true
+            };
+            return client.post(funding_source_url, request_body);
         })
-        .then(newCustomer => {
-            // @TODO replace id with real id returned from dwolla api response
-            const customerID = newCustomer.id;
-            return Promise.all([
-                ref
-                    .child('dwolla')
-                    .child('customers')
-                    .child(customerID)
-                    .set(newCustomer),
-                ref
-                    .child('dwolla')
-                    .child('users^customers')
-                    .child(userID)
-                    .set(customerID)
-            ]).then(() => customerID);
+        .then(() => {
+            return getCustomerID().then(customerId => {
+                const updates = {};
+                updates[`dwolla/customers^funding_source/${customerId}/${fundData.fund}/status`] = 'removed';
+                return ref.update(updates);
+            });
         });
 }
 
-module.exports = addDwollaCustomer;
+module.exports = removeFundingSource;

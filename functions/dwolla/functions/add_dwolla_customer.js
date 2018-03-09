@@ -11,7 +11,6 @@ const { getAPIClient } = require('../api');
 function addDwollaCustomer(userID, customerData) {
     return getAPIClient()
         .then(client => {
-            console.log('in add dwolla customer');
             return client.post('customers', customerData).then(res => {
                 return res.headers.get('location');
             });
