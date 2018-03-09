@@ -41,7 +41,7 @@ function linkFundingSource(userID, fundData) {
             const fundId = fundInfo[0].substr(fundInfo[0].lastIndexOf('/') + 1);
             return ref
                 .child('dwolla')
-                .child('customers^')
+                .child('customers^funding_sources')
                 .child(fundInfo[1])
                 .child(fundId)
                 .set({ status: 'pending' })
