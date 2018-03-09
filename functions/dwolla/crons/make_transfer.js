@@ -2,7 +2,7 @@ const moment = require('moment');
 const ref = require('../../ref');
 const { getAPIClient } = require('../api');
 const config = require('../../config');
-const { getDwollaHolding } = require('../utils');
+const { getCustomerHoldingID } = require('../utils');
 
 /**
  * makes recurring transfer
@@ -14,7 +14,7 @@ const { getDwollaHolding } = require('../utils');
 function makeTransfer(customerID, processDate, transferData) {
     return getAPIClient()
         .then(client => {
-            return getDwollaHolding(customerID).then(holdingID => {
+            return getCustomerHoldingID(customerID).then(holdingID => {
                 if (!holdingID) {
                     throw new Error('No dwolla holding account');
                 }
