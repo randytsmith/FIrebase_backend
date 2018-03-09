@@ -34,8 +34,7 @@ function runJob(event) {
     const name = request.name;
     console.log(`Got request(${key}): ${name}`);
     console.log('Parameters: ', request.parameters);
-    console.log(jobs)
-;
+    console.log(jobs);
     if (!jobs[name]) {
         return respondError(key, new APIError(`${name} job not found`, 404));
     }
