@@ -50,7 +50,7 @@ function getRecurringTransferData(customerID, processDate) {
 function getCustomerHoldingID(customerID) {
     return ref
         .child('dwolla')
-        .child('customers^dwolla_holding')
+        .child('customers^dwolla_holdings')
         .child(customerID)
         .once('value')
         .then(snap => snap.val());
