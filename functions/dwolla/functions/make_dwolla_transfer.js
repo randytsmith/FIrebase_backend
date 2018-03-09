@@ -20,7 +20,7 @@ function makeDwollaTransfer(userID, transferData) {
                             href: `${config.dwolla.url}/funding-sources/${transferData.fund}`
                         },
                         destination: {
-                            href: `https://api-sandbox.dwolla.com/customers/${customerId}`
+                            href: `${config.dwolla.url}/customers/${customerId}`
                         }
                     },
                     amount: {
