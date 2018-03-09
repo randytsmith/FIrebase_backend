@@ -47,10 +47,10 @@ function getRecurringTransferData(customerID, processDate) {
         .then(snap => snap.val());
 }
 
-function getDwollaHolding(customerID) {
+function getCustomerHoldingID(customerID) {
     return ref
         .child('dwolla')
-        .child('customers^dwolla_holdings')
+        .child('customers^dwolla_holding')
         .child(customerID)
         .once('value')
         .then(snap => snap.val());
@@ -60,7 +60,7 @@ module.exports = {
     getTransfer,
     getCustomer,
     getCustomerID,
-    getDwollaHolding,
     getRecurringTransferProcessDate,
-    getRecurringTransferData
+    getRecurringTransferData,
+    getCustomerHoldingID
 };
