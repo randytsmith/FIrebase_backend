@@ -8,7 +8,9 @@ const jobs = {
     add_dwolla_customer: dwollaJobs.add_dwolla_customer,
     add_recurring_transfer: dwollaJobs.add_recurring_transfer,
     link_funding_source: dwollaJobs.link_funding_source,
-    make_dwolla_transfer: dwollaJobs.remove_funding_source
+    remove_funding_source: dwollaJobs.remove_funding_source,
+    make_dwolla_transfer: dwollaJobs.remove_funding_source,
+    test_plaid: dwollaJobs.test_plaid
 };
 
 function respondSuccess(key, result) {
