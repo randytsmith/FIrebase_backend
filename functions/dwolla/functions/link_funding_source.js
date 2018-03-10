@@ -17,7 +17,7 @@ function linkFundingSource(userID, fundData) {
     return getCustomerID(userID)
         .then(customerID => {
             return getPlaidClient().then(plaid_client => {
-                plaid_client.exchangePublicToken(fundData.publicToken).then(plaid_res1 => {
+                return plaid_client.exchangePublicToken(fundData.publicToken).then(plaid_res1 => {
                     const access_token = plaid_res1.access_token;
                     console.log(access_token);
                     return plaid_client.createProcessorToken(access_token, acctId, 'dwolla').then(plaid_res2 => {
