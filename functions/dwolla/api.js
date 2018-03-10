@@ -24,7 +24,7 @@ function updateToken() {
 
 function getPlaidClient() {
     const plaidClient = new plaid.Client({
-        client_id: config.plaid.client_id,
+        client_id: config.plaid.id,
         secret: config.plaid.secret,
         public_key: config.plaid.key,
         plaidenv: plaid.environments.sandbox
