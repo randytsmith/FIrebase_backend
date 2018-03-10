@@ -23,12 +23,7 @@ function updateToken() {
 }
 
 function getPlaidClient() {
-    const plaidClient = new plaid.Client({
-        client_id: config.plaid.id,
-        secret: config.plaid.secret,
-        public_key: config.plaid.key,
-        plaidenv: plaid.environments.sandbox
-    });
+    const plaidClient = new plaid.Client(config.plaid.id, config.plaid.secret, config.plaid.key, plaid.environments.sandbox);
     return plaidClient;
 }
 
