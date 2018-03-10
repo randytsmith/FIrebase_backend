@@ -30,6 +30,7 @@ function getPlaidClient() {
         '19af20e429a5573d9336a7da329f03',
         plaid.environments.sandbox
     );
+    console.log('got plaid client');
     return plaidClient;
 }
 
