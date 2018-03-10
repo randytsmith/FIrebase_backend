@@ -79,7 +79,8 @@ function handleWebhook(req) {
             console.error('Webhook handler not found');
             return Promise.resolve();
         }
-
+        console.log(`Webhook request ${topic}`);
+        console.log(req.body);
         return webhookHandlers[topic](req.body);
     }
     return Promise.reject(new APIError('Signature did not match', 401));

@@ -1,4 +1,6 @@
 const ref = require('../../ref');
+const APIError = require('../../common/ApiError');
+const { getCustomer, getBankTransfer } = require('../utils');
 
 /**
  * handles customer_bank_transfer_completed event from dwolla
@@ -9,12 +11,33 @@ const ref = require('../../ref');
 function customerBankTransferCompletedWebhook(body) {
     const custUrl = body._links.customer.href;
     const customerID = custUrl.substr(custUrl.lastIndexOf('/') + 1);
-    const transferID = body.resourceId;
-    const updates = {};
+    const transferID = body.resourceID;
 
-    updates[`dwolla/customers^bank_transfers/${customerID}/${transferID}/status`] = 'completed';
-    updates[`dwolla/customers^bank_transfers/${customerID}/${transferID}/updated_at`] = -new Date().valueOf();
-    return ref.update(updates);
+    return Promise.all([getCustomer(customerID), getBankTransfer(customerID, transferID)]).then(resp => {
+        const customer = resp[0];
+        const transfer = resp[1];
+
+        if (!transfer) {
+            return Promise.reject(new APIError(`Transfer ${transferID} not found`, 404));
+        }
+
+        if (!customer) {
+            return Promise.reject(new APIError(`Customer ${customerID} not found`, 404));
+        }
+
+        const updates = {};
+
+        let amount = transfer.amount;
+        if (transfer.type === 'withdraw') {
+            amount *= -1;
+        }
+
+        updates[`dwolla/customers^bank_transfers/${customerID}/${transferID}/status`] = 'completed';
+        updates[`dwolla/customers^bank_transfers/${customerID}/${transferID}/updated_at`] = -new Date().valueOf();
+        updates[`dwolla/customers/${customerID}/balance`] = (customer.balance || 0) + amount;
+
+        return ref.update(updates);
+    });
 }
 
 module.exports = customerBankTransferCompletedWebhook;

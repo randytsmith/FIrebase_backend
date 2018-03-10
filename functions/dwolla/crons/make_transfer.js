@@ -1,4 +1,3 @@
-const moment = require('moment');
 const ref = require('../../ref');
 const { getAPIClient } = require('../api');
 const config = require('../../config');
@@ -16,7 +15,7 @@ function makeTransfer(customerID, processDate, transferData) {
         .then(client => {
             return getCustomerHoldingID(customerID).then(holdingID => {
                 if (!holdingID) {
-                    throw new Error('No dwolla holding account');
+                    throw new Error(`No dwolla holding account for ${customerID}'`);
                 }
 
                 const requestBody = {
@@ -41,12 +40,13 @@ function makeTransfer(customerID, processDate, transferData) {
         })
         .then(res => res.headers.get('location'))
         .then(transferUrl => {
+            const transferId = transferUrl.substr(transferUrl.lastIndexOf('/') + 1);
             return ref
                 .child('dwolla')
-                .child('customers^transfers')
+                .child('customers^bank_transfers')
                 .child(customerID)
-                .child(transferUrl)
-                .set({ amount: transferData.amount, status: 'pending' })
+                .child(transferId)
+                .set({ amount: transferData.amount, status: 'pending', type: 'deposit' })
                 .then(() => transferUrl);
         });
 }
