@@ -13,6 +13,7 @@ const { getCustomerID } = require('../utils');
  */
 function linkFundingSource(userID, fundData) {
     const acctId = fundData.metaData.account_id;
+    console.log(acctId);
     return getCustomerID(userID)
         .then(customerID => {
             return getPlaidClient().then(plaid_client => {
