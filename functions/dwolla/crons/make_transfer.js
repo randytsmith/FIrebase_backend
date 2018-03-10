@@ -31,12 +31,6 @@ function makeTransfer(customerID, processDate, transferData) {
                     amount: {
                         currency: 'USD',
                         value: Number(transferData.amount).toFixed(2)
-                    },
-                    metadata: {
-                        note: `Recurring capture on ${moment().format('MM/DD/YYYY')}`
-                    },
-                    clearing: {
-                        destination: 'next-available'
                     }
                 };
 
