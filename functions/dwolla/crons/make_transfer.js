@@ -30,7 +30,7 @@ function makeTransfer(customerID, processDate, transferData) {
                     },
                     amount: {
                         currency: 'USD',
-                        value: transferData.amount
+                        value: Number(transferData.amount).toFixed(2)
                     },
                     metadata: {
                         note: `Recurring capture on ${moment().format('MM/DD/YYYY')}`
@@ -39,6 +39,8 @@ function makeTransfer(customerID, processDate, transferData) {
                         destination: 'next-available'
                     }
                 };
+
+                console.log(requestBody);
 
                 return client.post('transfers', requestBody);
             });
