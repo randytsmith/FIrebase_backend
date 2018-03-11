@@ -32,7 +32,7 @@ function linkFundingSource(userID, fundData) {
                 const customerUrl = `${config.dwolla.url}/customers/${customerId}/funding-sources`;
                 const requestBody = {
                     plaidToken: dwolla_info[0],
-                    name: fundData.name
+                    name: fundData.metaData.name
                 };
                 return dwolla_client.post(customerUrl, requestBody).then(dwolla_res => {
                     return [dwolla_res.headers.get('location'), customerId];
