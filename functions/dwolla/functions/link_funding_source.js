@@ -32,7 +32,7 @@ function linkFundingSource(userID, fundData) {
                 const customerUrl = `${config.dwolla.url}/customers/${customerId}/funding-sources`;
                 const requestBody = {
                     plaidToken: dwolla_info[0],
-                    name: fundData.metaData.name
+                    name: fundData.metaData.account.name
                 };
                 return dwolla_client.post(customerUrl, requestBody).then(dwolla_res => {
                     return [dwolla_res.headers.get('location'), customerId];
@@ -46,7 +46,11 @@ function linkFundingSource(userID, fundData) {
                 .child('customers^funding_sources')
                 .child(fundInfo[1])
                 .child(fundId)
-                .set({ status: 'pending' })
+                .set({
+                    status: 'pending',
+                    name: fundData.institution.name,
+                    ins_id: fundData.institution.institution_id
+                })
                 .then(() => fundId);
         });
 }
