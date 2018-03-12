@@ -48,8 +48,9 @@ function linkFundingSource(userID, fundData) {
                 .child(fundId)
                 .set({
                     status: 'pending',
-                    name: fundData.institution.name,
-                    ins_id: fundData.institution.institution_id
+                    bank_name: fundData.metaData.institution.name,
+                    ins_id: fundData.metaData.institution.institution_id,
+                    name: fundData.metaData.account.name
                 })
                 .then(() => fundId);
         });
