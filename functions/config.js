@@ -4,7 +4,7 @@ const config = functions.config();
 
 const gmailConfig = config.gmail || {};
 const dwollaConfig = config.dwolla || {};
-const pushConfig = config.push || {};
+const fcmConfig = config.fcm || {};
 const plaidConfig = config.plaid || {};
 const sendgridConfig = config.sendgrid || {};
 
@@ -26,8 +26,8 @@ module.exports = {
         webhook: dwollaConfig.webhook || '',
         url: dwollaConfig.environment === 'production' ? 'https://api.dwolla.com' : 'https://api-sandbox.dwolla.com'
     },
-    push: {
-        key: pushConfig.key || ''
+    fcm: {
+        key: fcmConfig.key || ''
     },
     sendgrid: {
         from: sendgridConfig.from || 'no-reply@tripcents.co',
