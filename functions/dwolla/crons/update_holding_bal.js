@@ -14,8 +14,8 @@ function updateBalance(customerID) {
             if (!holdingID) {
                 throw new Error(`No dwolla holding account for ${customerID}'`);
             }
-
-            return client.get(`${config.dwolla.url}/funding-sources/${holdingID}`).then(res => {
+            console.log(holdingID);
+            return client.get(`${config.dwolla.url}/funding-sources/${holdingID}/balance`).then(res => {
                 const bal = res.body.balance.amount;
                 const updates = {};
                 console.log(bal);
@@ -41,7 +41,6 @@ function runCron2() {
 
             return Object.keys(data).reduce((lastPromise, customerID) => {
                 // const customerData = data[customerID];
-                console.log(`getting balance for ${customerID} if verified`);
                 return lastPromise
                     .then(() => {
                         return updateBalance(customerID);
