@@ -8,6 +8,7 @@ const {
     handleWebhook
 } = require('./dwolla/webhook');
 const makeTransfer = require('./dwolla/crons/make_transfer');
+const updateBalance = require('./dwolla/crons/update_holding_bal');
 
 exports.dwollaWebhook = functions.https.onRequest(requestHandler(handleWebhook));
 exports.startDwollaWebhook = functions.https.onRequest(requestHandler(startDwollaWebhookHandler));
@@ -18,5 +19,10 @@ exports.doJob = functions.database.ref('/requests/{requestID}').onCreate(runJob)
 exports.recurringTransfer = functions.https.onRequest((req, res) => {
     // run cron lazily
     makeTransfer(req.query.process_date);
+    res.status(200).send('Successfully triggered');
+});
+
+exports.updateHoldingBalance = functions.https.onRequest((req, res) => {
+    updateBalance();
     res.status(200).send('Successfully triggered');
 });
