@@ -16,7 +16,7 @@ function updateBalance(customerID) {
             }
             console.log(holdingID);
             return client.get(`${config.dwolla.url}/funding-sources/${holdingID}/balance`).then(res => {
-                const bal = res.body.balance.amount;
+                const bal = res.body.balance.value;
                 const updates = {};
                 console.log(bal);
                 updates[`dwolla/customers/${customerID}/balance`] = bal;
