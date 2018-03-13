@@ -6,6 +6,7 @@ const gmailConfig = config.gmail || {};
 const dwollaConfig = config.dwolla || {};
 const pushConfig = config.push || {};
 const plaidConfig = config.plaid || {};
+const sendgridConfig = config.sendgrid || {};
 
 module.exports = {
     plaid: {
@@ -27,5 +28,9 @@ module.exports = {
     },
     push: {
         key: pushConfig.key || ''
+    },
+    sendgrid: {
+        from: sendgridConfig.from || 'no-reply@tripcents.co',
+        key: sendgridConfig.key || ''
     }
 };
