@@ -14,11 +14,9 @@ function updateBalance(customerID) {
             if (!holdingID) {
                 throw new Error(`No dwolla holding account for ${customerID}'`);
             }
-            console.log(holdingID);
             return client.get(`${config.dwolla.url}/funding-sources/${holdingID}/balance`).then(res => {
                 const bal = res.body.balance.value;
                 const updates = {};
-                console.log(bal);
                 updates[`dwolla/customers/${customerID}/balance`] = bal;
                 return ref.update(updates);
             });
