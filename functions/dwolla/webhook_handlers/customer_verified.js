@@ -1,6 +1,9 @@
 const ref = require('../../ref');
 const { getAPIClient } = require('../api');
 const config = require('../../config');
+const utils = require('../utils');
+const fcm = require('../../fcm');
+const mailer = require('../../mailer');
 
 /**
  * handles customer_verified event from dwolla
@@ -18,6 +21,13 @@ function customerVerifiedWebhook(body) {
 
             updates[`dwolla/customers/${customerID}/status`] = 'verified';
             updates[`dwolla/customers^dwolla_holdings/${customerID}`] = holdingID;
+
+            // lazily send push notification and email
+            utils.getUserID(customerID).then(userID => {
+                fcm.sendNotificationToUser(userID, 'You are verified', 'Your dwolla account has been verified!');
+                mailer.sendHTML(userID, 'You are verified', 'Your account has been <b>verified</b>', 'Your account has been verified');
+            });
+
             return ref.update(updates);
         });
 }
