@@ -13,15 +13,12 @@ const { getCustomerID } = require('../utils');
  */
 function linkFundingSource(userID, fundData) {
     const acctId = fundData.metaData.account_id;
-    console.log(acctId);
     return getCustomerID(userID)
         .then(customerID => {
             const plaid_client = getPlaidClient();
             return plaid_client.exchangePublicToken(fundData.publicToken).then(plaid_res1 => {
                 const access_token = plaid_res1.access_token;
-                console.log(access_token);
                 return plaid_client.createProcessorToken(access_token, acctId, 'dwolla').then(plaid_res2 => {
-                    console.log(plaid_res2.processor_token);
                     return [plaid_res2.processor_token, customerID];
                 });
             });
@@ -32,7 +29,7 @@ function linkFundingSource(userID, fundData) {
                 const customerUrl = `${config.dwolla.url}/customers/${customerId}/funding-sources`;
                 const requestBody = {
                     plaidToken: dwolla_info[0],
-                    name: fundData.metaData.name
+                    name: fundData.metaData.account.name
                 };
                 return dwolla_client.post(customerUrl, requestBody).then(dwolla_res => {
                     return [dwolla_res.headers.get('location'), customerId];
@@ -43,10 +40,15 @@ function linkFundingSource(userID, fundData) {
             const fundId = fundInfo[0].substr(fundInfo[0].lastIndexOf('/') + 1);
             return ref
                 .child('dwolla')
-                .child('customers^funding_sources')
+                .child('customers^funding_source')
                 .child(fundInfo[1])
                 .child(fundId)
-                .set({ status: 'pending' })
+                .set({
+                    status: 'pending',
+                    bank_name: fundData.metaData.institution.name,
+                    ins_id: fundData.metaData.institution.institution_id,
+                    name: fundData.metaData.account.name
+                })
                 .then(() => fundId);
         });
 }
