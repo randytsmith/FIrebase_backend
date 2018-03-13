@@ -38,6 +38,15 @@ function getCustomerID(userID) {
         .then(snap => snap.val());
 }
 
+function getUserID(customerID) {
+    return ref
+        .child('dwolla')
+        .child('customers^users')
+        .child(customerID)
+        .once('value')
+        .then(snap => snap.val());
+}
+
 function getRecurringTransferProcessDate(customerID) {
     return ref
         .child('dwolla')
@@ -71,6 +80,7 @@ module.exports = {
     getBankTransfer,
     getCustomer,
     getCustomerID,
+    getUserID,
     getRecurringTransferProcessDate,
     getRecurringTransferData,
     getCustomerHoldingID
