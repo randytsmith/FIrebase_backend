@@ -24,8 +24,12 @@ function customerVerifiedWebhook(body) {
 
             // lazily send push notification and email
             utils.getUserID(customerID).then(userID => {
-                fcm.sendNotificationToUser(userID, 'You are verified', 'Your dwolla account has been verified!');
-                mailer.sendHTML(userID, 'You are verified', 'Your account has been <b>verified</b>', 'Your account has been verified');
+                console.log('sending email and push notification');
+                fcm.sendNotificationToUser(userID, 'You are verified', 'Your dwolla account has been verified!').catch(err => console.error(err));
+
+                mailer
+                    .sendHTMLToUser(userID, 'You are verified', 'Your account has been <b>verified</b>', 'Your account has been verified')
+                    .catch(err => console.error(err));
             });
 
             return ref.update(updates);
