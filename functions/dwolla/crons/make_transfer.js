@@ -46,7 +46,13 @@ function makeTransfer(customerID, processDate, transferData) {
                 .child('customers^bank_transfers')
                 .child(customerID)
                 .child(transferId)
-                .set({ amount: transferData.amount, status: 'pending', type: 'deposit' })
+                .set({
+                    amount: transferData.amount,
+                    status: 'pending',
+                    type: 'deposit',
+                    created_at: -new Date().valueOf(),
+                    updated_at: -new Date().valueOf()
+                })
                 .then(() => transferUrl);
         });
 }

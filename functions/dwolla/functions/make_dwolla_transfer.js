@@ -40,7 +40,13 @@ function makeDwollaTransfer(userID, transferData) {
                 .child('customers^bank_transfers')
                 .child(transferData.customer_id)
                 .child(transfer)
-                .set({ amount: transferData.amount, status: 'pending', type: 'deposit' })
+                .set({
+                    amount: transferData.amount,
+                    status: 'pending',
+                    type: 'deposit',
+                    created_at: -new Date().valueOf(),
+                    updated_at: -new Date().valueOf()
+                })
                 .then(() => transfer);
         });
 }

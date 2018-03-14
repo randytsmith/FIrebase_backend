@@ -40,7 +40,13 @@ function makeDwollaWithdraw(userID, transferData) {
                 .child('customers^bank_transfers')
                 .child(transferData.customer_id)
                 .child(transfer)
-                .set({ amount: transferData.amount, status: 'pending', type: 'withdraw' })
+                .set({
+                    amount: transferData.amount,
+                    status: 'pending',
+                    type: 'withdraw',
+                    created_at: -new Date().valueOf(),
+                    updated_at: -new Date().valueOf()
+                })
                 .then(() => transfer);
         });
 }
