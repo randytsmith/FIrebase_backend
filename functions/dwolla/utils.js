@@ -11,8 +11,6 @@ function getTransfer(customerID, transferID) {
 }
 
 function getBankTransfer(customerID, transferID) {
-    console.log(customerID);
-    console.log(transferID);
     return ref
         .child('dwolla')
         .child('customers^bank_transfers')
