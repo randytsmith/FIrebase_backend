@@ -11,7 +11,7 @@ const { getCustomer, getBankTransfer } = require('../utils');
 function customerBankTransferCompletedWebhook(body) {
     const custUrl = body._links.customer.href;
     const customerID = custUrl.substr(custUrl.lastIndexOf('/') + 1);
-    const transferID = body.resourceID;
+    const transferID = body.resourceId;
 
     return Promise.all([getCustomer(customerID), getBankTransfer(customerID, transferID)]).then(resp => {
         const customer = resp[0];
