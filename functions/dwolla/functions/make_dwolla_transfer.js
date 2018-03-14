@@ -2,7 +2,7 @@ const moment = require('moment');
 const ref = require('../../ref');
 const { getAPIClient } = require('../api');
 const config = require('../../config');
-const { getCustomerID } = require('../utils');
+const { getCustomerHoldingID } = require('../utils');
 
 /**
  * handles customer_activated event from dwolla
@@ -13,14 +13,14 @@ const { getCustomerID } = require('../utils');
 function makeDwollaTransfer(userID, transferData) {
     return getAPIClient()
         .then(client => {
-            return getCustomerID(userID).then(customerId => {
+            return getCustomerHoldingID(transferData.customer_id).then(holdingID => {
                 const requestBody = {
                     _links: {
                         source: {
                             href: `${config.dwolla.url}/funding-sources/${transferData.fund}`
                         },
                         destination: {
-                            href: `${config.dwolla.url}/customers/${customerId}`
+                            href: `${config.dwolla.url}/funding-sources/${holdingID}`
                         }
                     },
                     amount: {
@@ -38,7 +38,7 @@ function makeDwollaTransfer(userID, transferData) {
                 return client.post('transfers', requestBody).then(res => {
                     const transferUrl = res.headers.get('location');
                     const transferId = transferUrl.substr(transferUrl.lastIndexOf('/') + 1);
-                    return [customerId, transferId];
+                    return transferId;
                 });
             });
         })
@@ -46,10 +46,10 @@ function makeDwollaTransfer(userID, transferData) {
             return ref
                 .child('dwolla')
                 .child('customers^transfers')
-                .child(transfer[0])
-                .child(transfer[1])
+                .child(transferData.customer_id)
+                .child(transfer)
                 .set({ amount: transferData.amount, status: 'pending', type: 'deposit' })
-                .then(() => transfer[1]);
+                .then(() => transfer);
         });
 }
 
