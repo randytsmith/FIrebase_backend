@@ -10,6 +10,7 @@ const jobs = {
     link_funding_source: dwollaJobs.link_funding_source,
     remove_funding_source: dwollaJobs.remove_funding_source,
     make_dwolla_transfer: dwollaJobs.make_dwolla_transfer,
+    make_dwolla_withdraw: dwollaJobs.make_dwolla_withdraw,
     test_plaid: dwollaJobs.test_plaid
 };
 
