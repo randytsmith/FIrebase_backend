@@ -11,7 +11,6 @@ const jobs = {
     remove_funding_source: dwollaJobs.remove_funding_source,
     make_dwolla_transfer: dwollaJobs.make_dwolla_transfer,
     make_dwolla_withdraw: dwollaJobs.make_dwolla_withdraw,
-    testing_job_adds: dwollaJobs.testing_job_adds,
     test_plaid: dwollaJobs.test_plaid
 };
 
