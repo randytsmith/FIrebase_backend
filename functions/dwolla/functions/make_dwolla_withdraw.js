@@ -37,7 +37,7 @@ function makeDwollaWithdraw(userID, transferData) {
         .then(transfer => {
             return ref
                 .child('dwolla')
-                .child('customers^transfers')
+                .child('customers^bank_transfers')
                 .child(transferData.customer_id)
                 .child(transfer)
                 .set({ amount: transferData.amount, status: 'pending', type: 'withdraw' })
