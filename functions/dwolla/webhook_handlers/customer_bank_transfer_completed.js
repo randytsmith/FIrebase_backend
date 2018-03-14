@@ -24,6 +24,8 @@ function customerBankTransferCompletedWebhook(body) {
         if (!customer) {
             return Promise.reject(new APIError(`Customer ${customerID} not found`, 404));
         }
+        console.log(transfer);
+        console.log(customer);
 
         const updates = {};
 
