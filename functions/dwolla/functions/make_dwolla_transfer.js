@@ -26,13 +26,6 @@ function makeDwollaTransfer(userID, transferData) {
                     amount: {
                         currency: 'USD',
                         value: transferData.amount
-                    },
-                    metadata: {
-                        note: `One time transfer on ${moment().format('MM/DD/YYYY')}`
-                    },
-                    clearing: {
-                        destination: 'next-available',
-                        source: 'standard'
                     }
                 };
                 return client.post('transfers', requestBody).then(res => {
