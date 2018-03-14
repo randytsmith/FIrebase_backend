@@ -27,14 +27,14 @@ function customerBankTransferCompletedWebhook(body) {
 
         const updates = {};
 
-        let amount = transfer.amount;
+        let amount = transfer.amount * 1;
         if (transfer.type === 'withdraw') {
             amount *= -1;
         }
 
         updates[`dwolla/customers^bank_transfers/${customerID}/${transferID}/status`] = 'completed';
         updates[`dwolla/customers^bank_transfers/${customerID}/${transferID}/updated_at`] = -new Date().valueOf();
-        updates[`dwolla/customers/${customerID}/balance`] = (customer.balance || 0) + amount;
+        updates[`dwolla/customers/${customerID}/balance`] = (customer.balance * 1 || 0) + amount;
 
         return ref.update(updates);
     });
