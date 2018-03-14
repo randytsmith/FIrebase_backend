@@ -20,7 +20,7 @@ function removeFundingSource(userID, fundData) {
             return client.post(funding_source_url, request_body);
         })
         .then(() => {
-            return getCustomerID().then(customerId => {
+            return getCustomerID(userID).then(customerId => {
                 const updates = {};
                 updates[`dwolla/customers^funding_source/${customerId}/${fundData.fund}/status`] = 'removed';
                 return ref.update(updates);
