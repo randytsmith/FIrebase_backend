@@ -1,5 +1,5 @@
 const ref = require('../../ref');
-const { getCustomerID } = require('../utils');
+const { getRecurringTransferProcessDate, getCustomerID } = require('../utils');
 
 /**
  * subscribes user for recurring transfer
@@ -11,15 +11,25 @@ const { getCustomerID } = require('../utils');
  */
 function addRecurringTransfer(userID, transferData) {
     return getCustomerID(userID).then(customerID => {
-        const updates = {};
+        return getRecurringTransferProcessDate(customerID)
+            .then(processDate => {
+                const updates = {};
 
-        updates[`dwolla/recurring_transfers^customers/${transferData.process_date}/${customerID}`] = {
-            fund_source_id: transferData.fund,
-            amount: transferData.amount
-        };
-        updates[`dwolla/customers^recurring_transfers/${customerID}`] = transferData.process_date;
+                updates[`dwolla/recurring_transfers^customers/${processDate}/${customerID}`] = null;
+                updates[`dwolla/customers^recurring_transfers/${customerID}`] = null;
 
-        return ref.update(updates);
+                return ref.update(updates);
+            })
+            .then(() => {
+                const updates2 = {};
+                updates2[`dwolla/recurring_transfers^customers/${transferData.process_date}/${customerID}`] = {
+                    fund_source_id: transferData.fund,
+                    amount: transferData.amount
+                };
+                updates2[`dwolla/customers^recurring_transfers/${customerID}`] = transferData.process_date;
+
+                return ref.update(updates2);
+            });
     });
 }
 
