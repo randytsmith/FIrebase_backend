@@ -6,13 +6,15 @@ const ref = require('../../ref');
  * @param {string} _links.resource.href customer resource url
  * @returns {Promise}
  */
+// customer fund is being added as verified because in the sandbox
+// the verification webhooks sometimes come before created
 function customerFundingSourceAddedWebhook(body) {
     const custUrl = body._links.customer.href;
     const customerID = custUrl.substr(custUrl.lastIndexOf('/') + 1);
     const fundID = body.resourceId;
     const updates = {};
 
-    updates[`dwolla/customers^funding_source/${customerID}/${fundID}/status`] = 'created';
+    updates[`dwolla/customers^funding_source/${customerID}/${fundID}/status`] = 'verified';
     return ref.update(updates);
 }
 
