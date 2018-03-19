@@ -66,6 +66,17 @@ function getRecurringTransferData(customerID, processDate) {
         .then(snap => snap.val());
 }
 
+function getRecurringTransferStatus(customerID, processDate) {
+    return ref
+        .child('dwolla')
+        .child('recurring_transfers^customers')
+        .child(processDate)
+        .child(customerID)
+        .child('status')
+        .once('value')
+        .then(snap => snap.val());
+}
+
 function getCustomerHoldingID(customerID) {
     return ref
         .child('dwolla')
@@ -83,5 +94,6 @@ module.exports = {
     getUserID,
     getRecurringTransferProcessDate,
     getRecurringTransferData,
-    getCustomerHoldingID
+    getCustomerHoldingID,
+    getRecurringTransferStatus
 };

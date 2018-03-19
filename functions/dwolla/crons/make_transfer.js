@@ -1,7 +1,7 @@
 const ref = require('../../ref');
 const { getAPIClient } = require('../api');
 const config = require('../../config');
-const { getCustomerHoldingID } = require('../utils');
+const { getCustomerHoldingID, getRecurringTransferStatus } = require('../utils');
 
 /**
  * makes recurring transfer
@@ -17,25 +17,30 @@ function makeTransfer(customerID, processDate, transferData) {
                 if (!holdingID) {
                     throw new Error(`No dwolla holding account for ${customerID}'`);
                 }
-
-                const requestBody = {
-                    _links: {
-                        source: {
-                            href: `${config.dwolla.url}/funding-sources/${transferData.fund_source_id}`
-                        },
-                        destination: {
-                            href: `${config.dwolla.url}/funding-sources/${holdingID}`
-                        }
-                    },
-                    amount: {
-                        currency: 'USD',
-                        value: Number(transferData.amount).toFixed(2)
+                return getRecurringTransferStatus(customerID, processDate).then(status => {
+                    if (!status || status !== 'active') {
+                        throw new Error(`Transfer is not currently active for ${customerID}`);
                     }
-                };
 
-                console.log(requestBody);
+                    const requestBody = {
+                        _links: {
+                            source: {
+                                href: `${config.dwolla.url}/funding-sources/${transferData.fund_source_id}`
+                            },
+                            destination: {
+                                href: `${config.dwolla.url}/funding-sources/${holdingID}`
+                            }
+                        },
+                        amount: {
+                            currency: 'USD',
+                            value: Number(transferData.amount).toFixed(2)
+                        }
+                    };
 
-                return client.post('transfers', requestBody);
+                    console.log(requestBody);
+
+                    return client.post('transfers', requestBody);
+                });
             });
         })
         .then(res => res.headers.get('location'))
