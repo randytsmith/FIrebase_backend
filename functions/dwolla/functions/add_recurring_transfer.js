@@ -28,6 +28,7 @@ function addRecurringTransfer(userID, transferData) {
                     status: 'active'
                 };
                 updates2[`dwolla/customers^recurring_transfers/${customerID}`] = transferData.process_date;
+                updates2[`dwolla/users^recurring_transfers/${userID}`] = true;
 
                 return ref.update(updates2);
             });

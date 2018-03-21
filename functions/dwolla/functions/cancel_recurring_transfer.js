@@ -13,6 +13,7 @@ function cancelRecurringTransfer(userID, transferData) {
 
         updates[`dwolla/recurring_transfers^customers/${processDate}/${customerID}`] = null;
         updates[`dwolla/customers^recurring_transfers/${customerID}`] = null;
+        updates[`dwolla/users^recurring_transfers/${userID}`] = false;
 
         return ref.update(updates);
     });
