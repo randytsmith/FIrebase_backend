@@ -1,5 +1,5 @@
 const ref = require('../../ref');
-const request = require('request');
+const request = require('request-promise');
 
 /**
  * fetches and updates dwolla holding balance
@@ -14,6 +14,7 @@ function processTransfers() {
         .then(snap => snap.val())
         .then(token => {
             const options = {
+                method: 'POST',
                 url: 'https://api-sandbox.dwolla.com/sandbox-simulations',
                 headers: {
                     Accept: 'application/vnd.dwolla.v1.hal+json',
