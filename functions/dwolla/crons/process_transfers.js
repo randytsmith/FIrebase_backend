@@ -23,6 +23,7 @@ function processTransfers() {
             })
             .catch(err => {
                 console.log(err);
+                console.log('failed process transfers');
             });
     });
 }
