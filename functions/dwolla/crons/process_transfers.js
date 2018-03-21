@@ -8,7 +8,7 @@ const request = require('request-promise');
  */
 function processTransfers() {
     return ref
-        .child('dwolla_acces')
+        .child('dwolla_access')
         .child('token')
         .once('value')
         .then(snap => snap.val())
