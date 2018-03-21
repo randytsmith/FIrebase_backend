@@ -11,8 +11,7 @@ function cancelRecurringTransfer(userID, transferData) {
     return getRecurringTransferProcessDate(customerID).then(processDate => {
         const updates = {};
 
-        updates[`dwolla/recurring_transfers^customers/${processDate}/${customerID}`] = null;
-        updates[`dwolla/customers^recurring_transfers/${customerID}`] = null;
+        updates[`dwolla/recurring_transfers^customers/${processDate}/${customerID}/status`] = 'active';
 
         return ref.update(updates);
     });

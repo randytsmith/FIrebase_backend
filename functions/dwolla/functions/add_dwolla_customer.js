@@ -8,6 +8,8 @@ const { getAPIClient } = require('../api');
  * @param {Object} customerData
  * @returns {Promise<string>} promise of customerID added
  */
+// customer is being added as verified because in the sandbox
+// the verification webhooks sometimes come before created
 function addDwollaCustomer(userID, customerData) {
     return getAPIClient()
         .then(client => {
