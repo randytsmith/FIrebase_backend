@@ -35,19 +35,23 @@ function makeDwollaWithdraw(userID, transferData) {
             });
         })
         .then(transfer => {
-            return ref
-                .child('dwolla')
-                .child('customers^bank_transfers')
-                .child(transferData.customer_id)
-                .child(transfer)
-                .set({
-                    amount: transferData.amount,
-                    status: 'pending',
-                    type: 'withdraw',
-                    created_at: -new Date().valueOf(),
-                    updated_at: -new Date().valueOf()
-                })
-                .then(() => transfer);
+            const updates = {};
+            updates[`dwolla/users^bank_transfers/${userID}`] = transfer;
+            return ref.update(updates).then(() => {
+                return ref
+                    .child('dwolla')
+                    .child('customers^bank_transfers')
+                    .child(transferData.customer_id)
+                    .child(transfer)
+                    .set({
+                        amount: transferData.amount,
+                        status: 'pending',
+                        type: 'withdraw',
+                        created_at: -new Date().valueOf(),
+                        updated_at: -new Date().valueOf()
+                    })
+                    .then(() => transfer);
+            });
         });
 }
 
