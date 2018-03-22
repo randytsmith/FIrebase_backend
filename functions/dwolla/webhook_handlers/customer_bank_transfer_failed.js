@@ -1,7 +1,8 @@
 const ref = require('../../ref');
 const { getAPIClient } = require('../api');
 const config = require('../../config');
-const { getCustomerHoldingID } = require('../utils');
+const { getCustomerHoldingID, getUserID } = require('../utils');
+const crypto = require('crypto');
 /**
  * handles customer_bank_transfer_failed event from dwolla
  * @param {string} body.resourceId
@@ -18,12 +19,16 @@ function customerBankTransferFailedWebhook(body) {
                 throw new Error(`No dwolla holding account for ${customerID}'`);
             }
             return client.get(`${config.dwolla.url}/funding-sources/${holdingID}/balance`).then(res => {
-                const bal = res.body.balance.value;
-                const updates = {};
-                updates[`dwolla/customers^bank_transfers/${customerID}/${transferID}/status`] = 'failed';
-                updates[`dwolla/customers^bank_transfers/${customerID}/${transferID}/created_at`] = -new Date().valueOf();
-                updates[`dwolla/customers/${customerID}/balance`] = bal;
-                return ref.update(updates);
+                return getUserID(customerID).then(userID => {
+                    const bal = res.body.balance.value;
+                    const updates = {};
+                    const key = crypto.randomBytes(10).toString('hex');
+                    updates[`dwolla/users^bank_transfers/${userID}`] = key;
+                    updates[`dwolla/customers^bank_transfers/${customerID}/${transferID}/status`] = 'failed';
+                    updates[`dwolla/customers^bank_transfers/${customerID}/${transferID}/created_at`] = -new Date().valueOf();
+                    updates[`dwolla/customers/${customerID}/balance`] = bal;
+                    return ref.update(updates);
+                });
             });
         });
     });
