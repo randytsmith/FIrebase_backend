@@ -86,6 +86,16 @@ function getCustomerHoldingID(customerID) {
         .then(snap => snap.val());
 }
 
+function getFundingSourceData(customerID, fundID) {
+    return ref
+        .child('dwolla')
+        .child('customers^funding_source')
+        .child(customerID)
+        .child(fundID)
+        .once('value')
+        .then(snap => snap.val());
+}
+
 module.exports = {
     getTransfer,
     getBankTransfer,
@@ -95,5 +105,6 @@ module.exports = {
     getRecurringTransferProcessDate,
     getRecurringTransferData,
     getCustomerHoldingID,
-    getRecurringTransferStatus
+    getRecurringTransferStatus,
+    getFundingSourceData
 };

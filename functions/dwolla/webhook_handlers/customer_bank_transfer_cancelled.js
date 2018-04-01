@@ -3,6 +3,9 @@ const { getAPIClient } = require('../api');
 const config = require('../../config');
 const { getCustomerHoldingID, getUserID } = require('../utils');
 const crypto = require('crypto');
+const mailer = require('../../mailer');
+const fcm = require('../../fcm');
+const utils = require('../utils');
 
 /**
  * handles customer_bank_transfer_cancelled event from dwolla
@@ -28,6 +31,30 @@ function customerBankTransferCancelledWebhook(body) {
                     updates[`dwolla/customers^bank_transfers/${customerID}/${transferID}/status`] = 'cancelled';
                     updates[`dwolla/customers^bank_transfers/${customerID}/${transferID}/updated_at`] = -new Date().valueOf();
                     updates[`dwolla/customers/${customerID}/balance`] = bal;
+
+                    console.log('sending email and push notification');
+                    fcm.sendNotificationToUser(userID, 'Transfer cancelled', 'transfer cancelled').catch(err => console.error(err));
+                    const message = `A <type> transfer for <amount> was cancelled \
+                    on ${Date()
+                        .toISOstring()
+                        .replace(/T/, ' ')
+                        .replace(/\..+/, '')} from <source acct> to <dest>. For support please \
+                    contact tripcents support through the “profile” screen of \
+                    your app.`;
+                    const bodyDict = {
+                        body: message
+                    };
+                    mailer
+                        .sendTemplateToUser(
+                            userID,
+                            'Transfer Cancelled',
+                            '63fc288b-b692-4d2f-a49a-2e8e7ae08263',
+                            bodyDict,
+                            'transfer cancelled',
+                            'transfer cancelled'
+                        )
+                        .catch(err => console.error(err));
+
                     return ref.update(updates);
                 });
             });

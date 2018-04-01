@@ -1,5 +1,7 @@
 const ref = require('../../ref');
 const { getRecurringTransferProcessDate, getCustomerID } = require('../utils');
+const mailer = require('../../mailer');
+const fcm = require('../../fcm');
 
 /**
  * subscribes user for recurring transfer
@@ -29,6 +31,27 @@ function addRecurringTransfer(userID, transferData) {
                 };
                 updates2[`dwolla/customers^recurring_transfers/${customerID}`] = transferData.process_date;
                 updates2[`dwolla/users^recurring_transfers/${userID}`] = true;
+
+                console.log('sending email and push notification');
+                fcm.sendNotificationToUser(userID, 'Recurring transfer created', 'Recurring transfer created').catch(err => console.error(err));
+                const message = `You’ve scheduled a recurring transfer for\
+                 ${transferData.amount} to be transferred on the ${transferData.process_date} of each month, from \
+                 ${transferData.fundName} to your Travel Account. Just sit back, relax and let \
+                 us automate the saving for you. You can contact tripcents support \
+                 through the “profile” screen of your app.`;
+                const bodyDict = {
+                    body: message
+                };
+                mailer
+                    .sendTemplateToUser(
+                        userID,
+                        'Recurring Transfer Scheduled',
+                        '63fc288b-b692-4d2f-a49a-2e8e7ae08263',
+                        bodyDict,
+                        'recurring transfer scheduled',
+                        'recurring transfer scheduled'
+                    )
+                    .catch(err => console.error(err));
 
                 return ref.update(updates2);
             });
