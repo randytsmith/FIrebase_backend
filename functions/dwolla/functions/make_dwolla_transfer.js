@@ -48,7 +48,9 @@ function makeDwollaTransfer(userID, transferData) {
                         status: 'pending',
                         type: 'deposit',
                         created_at: -new Date().valueOf(),
-                        updated_at: -new Date().valueOf()
+                        updated_at: -new Date().valueOf(),
+                        bank_name: transferData.bank_name,
+                        account_name: transferData.account_name
                     })
                     .then(() => transfer);
             });

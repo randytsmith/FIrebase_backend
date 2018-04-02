@@ -41,12 +41,12 @@ function customerBankTransferCreationFailedWebhook(body) {
                         const message = [];
                         if (transfer.type === 'deposit') {
                             message[0] = `Oh no! A  transfer for ${transfer.amount} \
-                            has failed on ${date} from ${transfer.bankname} to your Travel Savings.  For \
+                            has failed on ${date} from ${transfer.bank_name} to your Travel Savings.  For \
                             support please contact tripcents support through the
                             “profile” screen of your app.`;
                         } else {
                             message[0] = `Oh no! A  transfer for ${transfer.amount} \
-                            has failed on ${date} from Travel Savings to ${transfer.bankname}.  For \
+                            has failed on ${date} from Travel Savings to ${transfer.bank_name}.  For \
                             support please contact tripcents support through the
                             “profile” screen of your app.`;
                         }
@@ -59,7 +59,7 @@ function customerBankTransferCreationFailedWebhook(body) {
                                 'Transfer creation failed',
                                 '63fc288b-b692-4d2f-a49a-2e8e7ae08263',
                                 bodyDict,
-                                'transfer createion failed',
+                                'transfer creation failed',
                                 'transfer creation failed'
                             )
                             .catch(err => console.error(err));

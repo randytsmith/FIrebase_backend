@@ -41,12 +41,12 @@ function customerBankTransferCancelledWebhook(body) {
                             .replace(/\..+/, '');
                         if (transfer.type === 'deposit') {
                             message[0] = `A transfer for ${transfer.amount} was cancelled \
-                            on ${date} from ${transfer.bankname} to Travel Savings. For support please \
+                            on ${date} from ${transfer.bank_name} to Travel Savings. For support please \
                             contact tripcents support through the “profile” screen of \
                             your app.`;
                         } else {
                             message[0] = `A transfer for ${transfer.amount} was cancelled \
-                            on ${date} from Travel Savings to ${transfer.bankname}. For support please \
+                            on ${date} from Travel Savings to ${transfer.bank_name}. For support please \
                             contact tripcents support through the “profile” screen of \
                             your app.`;
                         }

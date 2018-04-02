@@ -41,12 +41,12 @@ function customerBankTransferCompletedWebhook(body) {
                         const message = [];
                         if (transfer.type === 'deposit') {
                             message[0] = `“Hooray! A transfer for ${transfer.amount} \
-                            was completed on ${date} from ${transfer.bankname} to Travel Savings. \
+                            was completed on ${date} from ${transfer.bank_name} to Travel Savings. \
                             For support please contact tripcents support through \
                             the “profile” screen of your app.`;
                         } else {
                             message[0] = `“Hooray! A transfer for ${transfer.amount} \
-                            was completed on ${date} from Travel Savings to ${transfer.bankname}. \
+                            was completed on ${date} from Travel Savings to ${transfer.bank_name}. \
                             For support please contact tripcents support through \
                             the “profile” screen of your app.`;
                         }

@@ -27,7 +27,8 @@ function addRecurringTransfer(userID, transferData) {
                 updates2[`dwolla/recurring_transfers^customers/${transferData.process_date}/${customerID}`] = {
                     fund_source_id: transferData.fund,
                     amount: transferData.amount,
-                    status: 'active'
+                    status: 'active',
+                    bank_name: transferData.bank_name
                 };
                 updates2[`dwolla/customers^recurring_transfers/${customerID}`] = transferData.process_date;
                 updates2[`dwolla/users^recurring_transfers/${userID}`] = true;
@@ -36,7 +37,7 @@ function addRecurringTransfer(userID, transferData) {
                 fcm.sendNotificationToUser(userID, 'Recurring transfer created', 'Recurring transfer created').catch(err => console.error(err));
                 const message = `You’ve scheduled a recurring transfer for\
                  ${transferData.amount} to be transferred on the ${transferData.process_date} of each month, from \
-                 ${transferData.fundName} to your Travel Account. Just sit back, relax and let \
+                 ${transferData.bank_name} to your Travel Account. Just sit back, relax and let \
                  us automate the saving for you. You can contact tripcents support \
                  through the “profile” screen of your app.`;
                 const bodyDict = {

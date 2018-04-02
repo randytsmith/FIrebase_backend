@@ -40,12 +40,12 @@ function customerBankTransferFailedWebhook(body) {
                             .replace(/\..+/, '');
                         if (transfer.type === 'deposit') {
                             message[0] = `Oh no! A transfer for ${transfer.amount} \
-                            has failed on ${date} from ${transfer.bankname} to your Travel Savings.  For \
+                            has failed on ${date} from ${transfer.bank_name} to your Travel Savings.  For \
                             support please contact tripcents support through the
                             “profile” screen of your app.`;
                         } else {
                             message[0] = `Oh no! A transfer for ${transfer.amount} \
-                            has failed on ${date} from ${transfer.bankname} to your Travel Savings.  For \
+                            has failed on ${date} from ${transfer.bank_name} to your Travel Savings.  For \
                             support please contact tripcents support through the
                             “profile” screen of your app.`;
                         }
@@ -62,7 +62,6 @@ function customerBankTransferFailedWebhook(body) {
                                 'transfer failed'
                             )
                             .catch(err => console.error(err));
-
                         return ref.update(updates);
                     });
                 });

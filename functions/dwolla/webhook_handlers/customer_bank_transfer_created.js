@@ -41,13 +41,13 @@ function customerBankTransferCreatedWebhook(body) {
                         const message = [];
                         if (transfer.type === 'deposit') {
                             message[0] = `A transfer for ${transfer.amount} was created \
-                            on ${date} from ${transfer.bankname} to Travel Savings. You’re on your \
+                            on ${date} from ${transfer.bank_name} to Travel Savings. You’re on your \
                             way to making your dream trip a reality. For support \
                             please contact tripcents support through the “profile” \
                             screen of your app.`;
                         } else {
                             message[0] = `A transfer for ${transfer.amount} was created \
-                            on ${date} from Travel Savings to ${transfer.bankname}. You’re on your \
+                            on ${date} from Travel Savings to ${transfer.bank_name}. You’re on your \
                             way to making your dream trip a reality. For support \
                             please contact tripcents support through the “profile” \
                             screen of your app.`;

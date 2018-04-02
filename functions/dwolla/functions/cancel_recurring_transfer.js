@@ -20,7 +20,7 @@ function cancelRecurringTransfer(userID, transferData) {
             fcm.sendNotificationToUser(userID, 'Recurring transfer cancelled', 'Recurring transfer cancelled').catch(err => console.error(err));
             const message = `Just a heads up! You’ve cancelled a recurring \
             transfer for ${recurData.amount} to be deposited on the ${processDate} of each month,\
-             from ${recurData.fund_name} to your Travel Account. You can contact tripcents support through \
+             from ${recurData.bank_name} to your Travel Account. You can contact tripcents support through \
              the “profile” screen of your app.`;
             const bodyDict = {
                 body: message
