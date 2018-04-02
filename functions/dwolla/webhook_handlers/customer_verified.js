@@ -26,10 +26,7 @@ function customerVerifiedWebhook(body) {
             utils.getUserID(customerID).then(userID => {
                 console.log('sending email and push notification');
                 fcm.sendNotificationToUser(userID, 'You are verified', 'Your dwolla account has been verified!').catch(err => console.error(err));
-                const message =
-                    'Your dwolla account has been verified! You \
-                can now link a bank account and start saving. Get excited\
-                 and happy traveling!';
+                const message = 'Your dwolla account has been verified! You can now link a bank account and start saving. Get excited and happy traveling!';
                 const bodyDict = {
                     body: message
                 };

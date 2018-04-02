@@ -21,12 +21,13 @@ function customerFundingSourceRemoveddWebhook(body) {
         utils.getUserID(customerID).then(userID => {
             console.log('sending email and push notification');
             fcm.sendNotificationToUser(userID, 'Funding source verified', 'Funding source verified').catch(err => console.error(err));
-            const message = `Hey! You’ve unlinked your ${fundData.bank_name} \
-            account ${fundData.name} on new \
-            ${Date()
+            const date = Date()
                 .toISOstring()
                 .replace(/T/, ' ')
-                .replace(/\..+/, '')}. \
+                .replace(/\..+/, '');
+            const message = `Hey! You’ve unlinked your ${fundData.bank_name} \
+            account ${fundData.name} on new \
+            ${date}. \
             If you'd like to set up savings or transfer saved funds, please \
             reconnect your account within the app. For support please contact \
             tripcents support through the “profile” screen of your app`;

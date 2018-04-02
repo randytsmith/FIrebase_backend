@@ -23,12 +23,13 @@ function customerFundingSourceAddedWebhook(body) {
         utils.getUserID(customerID).then(userID => {
             console.log('sending email and push notification');
             fcm.sendNotificationToUser(userID, 'Funding Source Added', 'Funding Source Added').catch(err => console.error(err));
-            const message = `Congratulations! You’ve linked your ${fundData.bank_name} \
-            account ${fundData.name} on new \
-            ${Date()
+            const date = Date()
                 .toISOstring()
                 .replace(/T/, ' ')
-                .replace(/\..+/, '')}. \
+                .replace(/\..+/, '');
+            const message = `Congratulations! You’ve linked your ${fundData.bank_name} \
+            account ${fundData.name} on new \
+            ${date}. \
             You can now start saving for \
             your dream trips. For support please contact tripcents support \
             through the “profile” screen of your app`;

@@ -20,12 +20,13 @@ function customerFundingSourceVerifiedWebhook(body) {
         utils.getUserID(customerID).then(userID => {
             console.log('sending email and push notification');
             fcm.sendNotificationToUser(userID, 'Funding source verified', 'Funding source verified').catch(err => console.error(err));
-            const message = `Thanks for connecting your bank account! Your ${fundData.bank_name} \
-            account ${fundData.name} has been verified on \
-            ${Date()
+            const date = Date()
                 .toISOstring()
                 .replace(/T/, ' ')
-                .replace(/\..+/, '')}. \
+                .replace(/\..+/, '');
+            const message = `Thanks for connecting your bank account! Your ${fundData.bank_name} \
+            account ${fundData.name} has been verified on \
+            ${date}. \
             For support please contact tripcents support \
             through the “profile” screen of your app`;
             const bodyDict = {
