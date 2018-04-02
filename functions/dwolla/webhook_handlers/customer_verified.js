@@ -34,7 +34,7 @@ function customerVerifiedWebhook(body) {
                     .sendTemplateToUser(
                         userID,
                         'Dwolla account verified!',
-                        '63fc288b-b692-4d2f-a49a-2e8e7ae08263',
+                        '196a1c48-5617-4b25-a7bb-8af3863b5fcc',
                         bodyDict,
                         'customer verified',
                         'customer verified'

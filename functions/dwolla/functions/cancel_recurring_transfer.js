@@ -29,7 +29,7 @@ function cancelRecurringTransfer(userID, transferData) {
                 .sendTemplateToUser(
                     userID,
                     'Dwolla account suspended',
-                    '63fc288b-b692-4d2f-a49a-2e8e7ae08263',
+                    '196a1c48-5617-4b25-a7bb-8af3863b5fcc',
                     bodyDict,
                     'recurring transfer cancelled',
                     'recurring transfer cancelled'
