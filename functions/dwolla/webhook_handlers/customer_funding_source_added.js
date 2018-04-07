@@ -1,6 +1,6 @@
 const ref = require('../../ref');
 const mailer = require('../../mailer');
-const fcm = require('../../fcm');
+// const fcm = require('../../fcm');
 const utils = require('../utils');
 
 /**
@@ -22,33 +22,22 @@ function customerFundingSourceAddedWebhook(body) {
     utils.getFundingSourceData(customerID, fundID).then(fundData => {
         utils.getUserID(customerID).then(userID => {
             console.log('sending email and push notification');
-            fcm.sendNotificationToUser(userID, 'Funding Source Added', 'Funding Source Added').catch(err => console.error(err));
-            const date = Date()
-                .toISOstring()
-                .replace(/T/, ' ')
-                .replace(/\..+/, '');
-            const message = `Congratulations! You’ve linked your ${fundData.bank_name} \
+            // fcm.sendNotificationToUser(userID, 'Funding Source Added', 'Funding Source Added').catch(err => console.error(err));
+            const date = new Date().toLocaleString();
+            const message = `Now this is a serious cause for celebration! You’ve linked your ${fundData.bank_name} \
             account ${fundData.name} on new \
             ${date}. \
-            You can now start saving for \
-            your dream trips. For support please contact tripcents support \
-            through the “profile” screen of your app`;
+            You may have 99 problems, but saving for a trip ain’t one! For support please contact tripcents support \
+            through the “profile” screen of your app.`;
             const bodyDict = {
-                body: message
+                test: message
             };
             mailer
-                .sendTemplateToUser(
-                    userID,
-                    'Funding Source Verified!',
-                    '196a1c48-5617-4b25-a7bb-8af3863b5fcc',
-                    bodyDict,
-                    'Funding Source Added',
-                    'Funding Source Added'
-                )
+                .sendTemplateToUser(userID, 'Funding Source Added!', '196a1c48-5617-4b25-a7bb-8af3863b5fcc', bodyDict, ' ', ' ')
                 .catch(err => console.error(err));
         });
-        return ref.update(updates);
     });
+    return ref.update(updates);
 }
 
 module.exports = customerFundingSourceAddedWebhook;

@@ -2,7 +2,7 @@ const ref = require('../../ref');
 const { getAPIClient } = require('../api');
 const config = require('../../config');
 const utils = require('../utils');
-const fcm = require('../../fcm');
+// const fcm = require('../../fcm');
 const mailer = require('../../mailer');
 
 /**
@@ -25,23 +25,15 @@ function customerVerifiedWebhook(body) {
             // lazily send push notification and email
             utils.getUserID(customerID).then(userID => {
                 console.log('sending email and push notification');
-                fcm.sendNotificationToUser(userID, 'You are verified', 'Your dwolla account has been verified!').catch(err => console.error(err));
+                // fcm.sendNotificationToUser(userID, 'You are verified', 'Your dwolla account has been verified!').catch(err => console.error(err));
                 const message = 'Your dwolla account has been verified! You can now link a bank account and start saving. Get excited and happy traveling!';
                 const bodyDict = {
-                    body: message
+                    test: message
                 };
                 mailer
-                    .sendTemplateToUser(
-                        userID,
-                        'Dwolla account verified!',
-                        '196a1c48-5617-4b25-a7bb-8af3863b5fcc',
-                        bodyDict,
-                        'customer verified',
-                        'customer verified'
-                    )
+                    .sendTemplateToUser(userID, 'Dwolla account verified!', '196a1c48-5617-4b25-a7bb-8af3863b5fcc', bodyDict, ' ', ' ')
                     .catch(err => console.error(err));
             });
-
             return ref.update(updates);
         });
 }

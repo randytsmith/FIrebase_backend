@@ -1,6 +1,6 @@
 const ref = require('../../ref');
 const mailer = require('../../mailer');
-const fcm = require('../../fcm');
+// const fcm = require('../../fcm');
 const utils = require('../utils');
 
 /**
@@ -16,36 +16,25 @@ function customerFundingSourceRemoveddWebhook(body) {
     const updates = {};
 
     updates[`dwolla/customers^funding_source/${customerID}/${fundID}`] = null;
-
-    utils.getFundingSourceData(customerID, fundID).then(fundData => {
+    return utils.getFundingSourceData(customerID, fundID).then(fundData => {
         utils.getUserID(customerID).then(userID => {
             console.log('sending email and push notification');
-            fcm.sendNotificationToUser(userID, 'Funding source verified', 'Funding source verified').catch(err => console.error(err));
-            const date = Date()
-                .toISOstring()
-                .replace(/T/, ' ')
-                .replace(/\..+/, '');
-            const message = `Hey! You’ve unlinked your ${fundData.bank_name} \
+            // fcm.sendNotificationToUser(userID, 'Funding source verified', 'Funding source verified').catch(err => console.error(err));
+            const date = new Date().toLocaleString();
+            const message = `Here's a friendly confirmation email! You’ve unlinked your ${fundData.bank_name} \
             account ${fundData.name} on new \
             ${date}. \
             If you'd like to set up savings or transfer saved funds, please \
-            reconnect your account within the app. For support please contact \
-            tripcents support through the “profile” screen of your app`;
+            reconnect or link another bank account within the app. For support please contact \
+            tripcents support through the “profile” screen of your app.`;
+            console.log('declared message');
             const bodyDict = {
-                body: message
+                test: message
             };
             mailer
-                .sendTemplateToUser(
-                    userID,
-                    'Funding Source Removed!',
-                    '196a1c48-5617-4b25-a7bb-8af3863b5fcc',
-                    bodyDict,
-                    'funding source removed',
-                    'funding source removed'
-                )
+                .sendTemplateToUser(userID, 'Funding Source Removed!', '196a1c48-5617-4b25-a7bb-8af3863b5fcc', bodyDict, ' ', ' ')
                 .catch(err => console.error(err));
         });
-
         return ref.update(updates);
     });
 }

@@ -1,6 +1,6 @@
 const ref = require('../../ref');
 const mailer = require('../../mailer');
-const fcm = require('../../fcm');
+// const fcm = require('../../fcm');
 const utils = require('../utils');
 
 /**
@@ -19,33 +19,23 @@ function customerFundingSourceVerifiedWebhook(body) {
     utils.getFundingSourceData(customerID, fundID).then(fundData => {
         utils.getUserID(customerID).then(userID => {
             console.log('sending email and push notification');
-            fcm.sendNotificationToUser(userID, 'Funding source verified', 'Funding source verified').catch(err => console.error(err));
-            const date = Date()
-                .toISOstring()
-                .replace(/T/, ' ')
-                .replace(/\..+/, '');
-            const message = `Thanks for connecting your bank account! Your ${fundData.bank_name} \
+            // fcm.sendNotificationToUser(userID, 'Funding source verified', 'Funding source verified').catch(err => console.error(err));
+            const date = new Date().toLocaleString();
+            const message = `Thanks for connecting your bank account! Good news, it’s verified \
+            and ready for some saving action. Your ${fundData.bank_name} \
             account ${fundData.name} has been verified on \
             ${date}. \
             For support please contact tripcents support \
-            through the “profile” screen of your app`;
+            through the “profile” screen of your app.`;
             const bodyDict = {
-                body: message
+                test: message
             };
             mailer
-                .sendTemplateToUser(
-                    userID,
-                    'Funding Source Verified!',
-                    '196a1c48-5617-4b25-a7bb-8af3863b5fcc',
-                    bodyDict,
-                    'funding source verified',
-                    'funding source verified'
-                )
+                .sendTemplateToUser(userID, 'Funding Source Verified!', '196a1c48-5617-4b25-a7bb-8af3863b5fcc', bodyDict, ' ', ' ')
                 .catch(err => console.error(err));
         });
-
-        return ref.update(updates);
     });
+    return ref.update(updates);
 }
 
 module.exports = customerFundingSourceVerifiedWebhook;

@@ -1,7 +1,7 @@
 const ref = require('../../ref');
 const { getRecurringTransferProcessDate, getRecurringTransferData } = require('../utils');
 const mailer = require('../../mailer');
-const fcm = require('../../fcm');
+// const fcm = require('../../fcm');
 
 /**
  * subscribes user from recurring transfer
@@ -17,23 +17,16 @@ function cancelRecurringTransfer(userID, transferData) {
             updates[`dwolla/customers^recurring_transfers/${customerID}`] = null;
             updates[`dwolla/users^recurring_transfers/${userID}`] = false;
             console.log('sending email and push notification');
-            fcm.sendNotificationToUser(userID, 'Recurring transfer cancelled', 'Recurring transfer cancelled').catch(err => console.error(err));
+            // fcm.sendNotificationToUser(userID, 'Recurring transfer cancelled', 'Recurring transfer cancelled').catch(err => console.error(err));
             const message = `Just a heads up! You’ve cancelled a recurring \
-            transfer for ${recurData.amount} to be deposited on the ${processDate} of each month,\
-             from ${recurData.bank_name} to your Travel Account. You can contact tripcents support through \
+            transfer for ${recurData.amount} to be transfered on the ${processDate} of each month,\
+             from ${recurData.bank_name} to your Travel Fund. You can contact tripcents support through \
              the “profile” screen of your app.`;
             const bodyDict = {
-                body: message
+                test: message
             };
             mailer
-                .sendTemplateToUser(
-                    userID,
-                    'Dwolla account suspended',
-                    '196a1c48-5617-4b25-a7bb-8af3863b5fcc',
-                    bodyDict,
-                    'recurring transfer cancelled',
-                    'recurring transfer cancelled'
-                )
+                .sendTemplateToUser(userID, 'Dwolla account suspended', '196a1c48-5617-4b25-a7bb-8af3863b5fcc', bodyDict, 'Hey! ', 'Hey! ')
                 .catch(err => console.error(err));
 
             return ref.update(updates);

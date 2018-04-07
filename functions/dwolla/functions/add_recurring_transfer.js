@@ -1,8 +1,6 @@
 const ref = require('../../ref');
 const { getRecurringTransferProcessDate, getCustomerID } = require('../utils');
 const mailer = require('../../mailer');
-const fcm = require('../../fcm');
-
 /**
  * subscribes user for recurring transfer
  * @param {string} userID
@@ -34,24 +32,16 @@ function addRecurringTransfer(userID, transferData) {
                 updates2[`dwolla/users^recurring_transfers/${userID}`] = true;
 
                 console.log('sending email and push notification');
-                fcm.sendNotificationToUser(userID, 'Recurring transfer created', 'Recurring transfer created').catch(err => console.error(err));
-                const message = `You’ve scheduled a recurring transfer for\
+                const message = `Nice! You’ve scheduled a recurring transfer for $\
                  ${transferData.amount} to be transferred on the ${transferData.process_date} of each month, from \
-                 ${transferData.bank_name} to your Travel Account. Just sit back, relax and let \
-                 us automate the saving for you. You can contact tripcents support \
+                 ${transferData.bank_name} to your Travel Fund. Just sit back, relax, and watch \
+                 as your travel fund fulfills its potential. You can contact tripcents support \
                  through the “profile” screen of your app.`;
                 const bodyDict = {
-                    body: message
+                    test: message
                 };
                 mailer
-                    .sendTemplateToUser(
-                        userID,
-                        'Recurring Transfer Scheduled',
-                        '196a1c48-5617-4b25-a7bb-8af3863b5fcc',
-                        bodyDict,
-                        'recurring transfer scheduled',
-                        'recurring transfer scheduled'
-                    )
+                    .sendTemplateToUser(userID, 'Recurring Transfer Scheduled', '196a1c48-5617-4b25-a7bb-8af3863b5fcc', bodyDict, 'Hey! ', 'Hey! ')
                     .catch(err => console.error(err));
 
                 return ref.update(updates2);

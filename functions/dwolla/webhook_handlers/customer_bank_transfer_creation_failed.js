@@ -3,7 +3,7 @@ const { getAPIClient } = require('../api');
 const config = require('../../config');
 const { getCustomerHoldingID, getUserID } = require('../utils');
 const crypto = require('crypto');
-const fcm = require('../../fcm');
+// const fcm = require('../../fcm');
 const utils = require('../utils');
 const mailer = require('../../mailer');
 
@@ -31,41 +31,31 @@ function customerBankTransferCreationFailedWebhook(body) {
                     updates[`dwolla/customers^bank_transfers/${customerID}/${transferID}/status`] = 'creation_failed';
                     updates[`dwolla/customers^bank_transfers/${customerID}/${transferID}/created_at`] = -new Date().valueOf();
                     updates[`dwolla/customers/${customerID}/balance`] = bal;
-                    return utils.getBankTransfer(customerID, transferID).then(transfer => {
+                    utils.getBankTransfer(customerID, transferID).then(transfer => {
                         console.log('sending email and push notification');
-                        fcm.sendNotificationToUser(userID, 'transfer created failed', 'transfer creation failed').catch(err => console.error(err));
-                        const date = Date()
-                            .toISOstring()
-                            .replace(/T/, ' ')
-                            .replace(/\..+/, '');
-                        const message = [];
+                        // fcm.sendNotificationToUser(userID, 'Transfer created', 'transfer created').catch(err => console.error(err));
+                        const date = new Date().toLocaleString();
+                        const src = [];
+                        const dest = [];
                         if (transfer.type === 'deposit') {
-                            message[0] = `Oh no! A  transfer for ${transfer.amount} \
-                            has failed on ${date} from ${transfer.bank_name} to your Travel Savings.  For \
-                            support please contact tripcents support through the
-                            “profile” screen of your app.`;
+                            src[0] = transfer.bank_name;
+                            dest[0] = 'Travel Fund';
                         } else {
-                            message[0] = `Oh no! A  transfer for ${transfer.amount} \
-                            has failed on ${date} from Travel Savings to ${transfer.bank_name}.  For \
-                            support please contact tripcents support through the
-                            “profile” screen of your app.`;
+                            src[0] = 'Travel Fund';
+                            dest[0] = transfer.bank_name;
                         }
+                        const message = `Aw shucks! A transfer for ${transfer.amount} failed \
+                            on ${date} from ${src[0]} to ${dest[0]}. For support \
+                            please contact tripcents support through the “profile” \
+                            screen of your app.`;
                         const bodyDict = {
-                            body: message
+                            test: message[0]
                         };
                         mailer
-                            .sendTemplateToUser(
-                                userID,
-                                'Transfer creation failed',
-                                '196a1c48-5617-4b25-a7bb-8af3863b5fcc',
-                                bodyDict,
-                                'transfer creation failed',
-                                'transfer creation failed'
-                            )
+                            .sendTemplateToUser(userID, 'Transfer creation failed', '196a1c48-5617-4b25-a7bb-8af3863b5fcc', bodyDict, ' ', ' ')
                             .catch(err => console.error(err));
-
-                        return ref.update(updates);
                     });
+                    return ref.update(updates);
                 });
             });
         });

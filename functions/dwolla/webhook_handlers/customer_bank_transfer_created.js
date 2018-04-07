@@ -4,7 +4,7 @@ const config = require('../../config');
 const { getCustomerHoldingID, getUserID } = require('../utils');
 const crypto = require('crypto');
 const mailer = require('../../mailer');
-const fcm = require('../../fcm');
+// const fcm = require('../../fcm');
 const utils = require('../utils');
 /**
  * handles customer_bank_transfer_created event from dwolla
@@ -31,43 +31,31 @@ function customerBankTransferCreatedWebhook(body) {
                     updates[`dwolla/customers^bank_transfers/${customerID}/${transferID}/created_at`] = -new Date().valueOf();
                     updates[`dwolla/customers^bank_transfers/${customerID}/${transferID}/updated_at`] = -new Date().valueOf();
                     updates[`dwolla/customers/${customerID}/balance`] = bal;
-                    return utils.getBankTransfer(customerID, transferID).then(transfer => {
+                    utils.getBankTransfer(customerID, transferID).then(transfer => {
                         console.log('sending email and push notification');
-                        fcm.sendNotificationToUser(userID, 'Transfer created', 'transfer created').catch(err => console.error(err));
-                        const date = Date()
-                            .toISOstring()
-                            .replace(/T/, ' ')
-                            .replace(/\..+/, '');
-                        const message = [];
+                        // fcm.sendNotificationToUser(userID, 'Transfer created', 'transfer created').catch(err => console.error(err));
+                        const date = new Date().toLocaleString();
+                        const src = [];
+                        const dest = [];
                         if (transfer.type === 'deposit') {
-                            message[0] = `A transfer for ${transfer.amount} was created \
-                            on ${date} from ${transfer.bank_name} to Travel Savings. You’re on your \
-                            way to making your dream trip a reality. For support \
-                            please contact tripcents support through the “profile” \
-                            screen of your app.`;
+                            src[0] = transfer.bank_name;
+                            dest[0] = 'Travel Fund';
                         } else {
-                            message[0] = `A transfer for ${transfer.amount} was created \
-                            on ${date} from Travel Savings to ${transfer.bank_name}. You’re on your \
-                            way to making your dream trip a reality. For support \
-                            please contact tripcents support through the “profile” \
-                            screen of your app.`;
+                            src[0] = 'Travel Fund';
+                            dest[0] = transfer.bank_name;
                         }
+                        const message = `Just keeping you in the loop - A transfer for ${transfer.amount} was created \
+                            on ${date} from ${src[0]} to ${dest[0]}. A few more transfers and you’ll be choosing your \
+                            seats for your flight to paradise (hopefully it’s not a middle seat). For \
+                            support please contact tripcents support through the “profile” screen of your app.`;
                         const bodyDict = {
-                            body: message
+                            test: message[0]
                         };
                         mailer
-                            .sendTemplateToUser(
-                                userID,
-                                'Transfer created',
-                                '196a1c48-5617-4b25-a7bb-8af3863b5fcc',
-                                bodyDict,
-                                'transfer created',
-                                'transfer created'
-                            )
+                            .sendTemplateToUser(userID, 'Transfer created', '196a1c48-5617-4b25-a7bb-8af3863b5fcc', bodyDict, ' ', ' ')
                             .catch(err => console.error(err));
-
-                        return ref.update(updates);
                     });
+                    return ref.update(updates);
                 });
             });
         });
