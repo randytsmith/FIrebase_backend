@@ -33,15 +33,15 @@ function addRecurringTransfer(userID, transferData) {
 
                 console.log('sending email and push notification');
                 const message = `Nice! You’ve scheduled a recurring transfer for $\
-                 ${transferData.amount} to be transferred on the ${transferData.process_date} of each month, from \
+                 ${transferData.amount} to be transfered on the ${transferData.process_date} of each month, from \
                  ${transferData.bank_name} to your Travel Fund. Just sit back, relax, and watch \
                  as your travel fund fulfills its potential. You can contact tripcents support \
                  through the “profile” screen of your app.`;
                 const bodyDict = {
-                    test: message
+                    // test: message
                 };
                 mailer
-                    .sendTemplateToUser(userID, 'Recurring Transfer Scheduled', '196a1c48-5617-4b25-a7bb-8af3863b5fcc', bodyDict, 'Hey! ', 'Hey! ')
+                    .sendTemplateToUser(userID, 'Recurring Transfer Scheduled', '196a1c48-5617-4b25-a7bb-8af3863b5fcc', bodyDict, ' ', message)
                     .catch(err => console.error(err));
 
                 return ref.update(updates2);

@@ -16,6 +16,10 @@ const customer_transfer_cancelled = require('./customer_transfer_cancelled');
 const customer_transfer_created = require('./customer_transfer_created');
 const customer_transfer_failed = require('./customer_transfer_failed');
 const customer_transfer_completed = require('./customer_transfer_completed');
+const customer_verification_document_approved = require('./customer_verification_document_approved');
+const customer_verification_document_failed = require('./customer_verification_document_failed');
+const customer_verification_document_uploaded = require('./customer_verification_document_uploaded');
+const customer_verification_document_needed = require('./customer_verification_document_needed');
 
 module.exports = {
     customer_created,
@@ -35,5 +39,9 @@ module.exports = {
     customer_transfer_cancelled,
     customer_transfer_created,
     customer_transfer_failed,
-    customer_transfer_completed
+    customer_transfer_completed,
+    customer_verification_document_approved,
+    customer_verification_document_failed,
+    customer_verification_document_uploaded,
+    customer_verification_document_needed
 };

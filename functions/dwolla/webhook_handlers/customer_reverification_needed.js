@@ -14,12 +14,15 @@ function customerReverificationNeededWebhook(body) {
     utils.getUserID(customerID).then(userID => {
         console.log('sending email and push notification');
         // fcm.sendNotificationToUser(userID, 'You are deactivated', 'Your dwolla account has been deactivated').catch(err => console.error(err));
-        const message = 'Your account has been activated, please contact tripcents support through the “profile” screen of your app.';
+        const message =
+            'Your account has requires reverification! You can \
+        resubmit your information or upload the required documents through the \
+        app. Please contact tripcents support through the “profile” screen of your app.';
         const bodyDict = {
-            test: message
+            // test: message
         };
         mailer
-            .sendTemplateToUser(userID, 'Dwolla account activated', '196a1c48-5617-4b25-a7bb-8af3863b5fcc', bodyDict, 'Hey!', 'Hey!')
+            .sendTemplateToUser(userID, 'Customer reverification needed', '196a1c48-5617-4b25-a7bb-8af3863b5fcc', bodyDict, ' ', message)
             .catch(err => console.error(err));
     });
     return ref.update(updates);

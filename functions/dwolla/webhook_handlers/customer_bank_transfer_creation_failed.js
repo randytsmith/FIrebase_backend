@@ -37,22 +37,25 @@ function customerBankTransferCreationFailedWebhook(body) {
                         const date = new Date().toLocaleString();
                         const src = [];
                         const dest = [];
+                        let message = '';
                         if (transfer.type === 'deposit') {
                             src[0] = transfer.bank_name;
                             dest[0] = 'Travel Fund';
+                            message = `Aw shucks! A transfer for ${transfer.amount} failed \
+                                on ${date} from ${src[0]} to ${dest[0]}. For support \
+                                please contact tripcents support through the “profile” \
+                                screen of your app.`;
                         } else {
                             src[0] = 'Travel Fund';
                             dest[0] = transfer.bank_name;
+                            message = `Uh oh, know you don’t want to hear this but a withdrawal \
+                            for ${transfer.amount} failed on ${date} from ${src[0]} to ${dest[0]}. Please check \
+                            with your bank. If this doesn’t seem right, feel free to contact \
+                            tripcents support anytime through the profile screen of your app`;
                         }
-                        const message = `Aw shucks! A transfer for ${transfer.amount} failed \
-                            on ${date} from ${src[0]} to ${dest[0]}. For support \
-                            please contact tripcents support through the “profile” \
-                            screen of your app.`;
-                        const bodyDict = {
-                            test: message[0]
-                        };
+                        const bodyDict = {};
                         mailer
-                            .sendTemplateToUser(userID, 'Transfer creation failed', '196a1c48-5617-4b25-a7bb-8af3863b5fcc', bodyDict, ' ', ' ')
+                            .sendTemplateToUser(userID, 'Transfer creation failed', '196a1c48-5617-4b25-a7bb-8af3863b5fcc', bodyDict, ' ', message)
                             .catch(err => console.error(err));
                     });
                     return ref.update(updates);

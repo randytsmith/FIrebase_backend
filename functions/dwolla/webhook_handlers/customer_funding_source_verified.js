@@ -28,10 +28,10 @@ function customerFundingSourceVerifiedWebhook(body) {
             For support please contact tripcents support \
             through the “profile” screen of your app.`;
             const bodyDict = {
-                test: message
+                // test: message
             };
             mailer
-                .sendTemplateToUser(userID, 'Funding Source Verified!', '196a1c48-5617-4b25-a7bb-8af3863b5fcc', bodyDict, ' ', ' ')
+                .sendTemplateToUser(userID, 'Funding Source Verified!', '196a1c48-5617-4b25-a7bb-8af3863b5fcc', bodyDict, ' ', message)
                 .catch(err => console.error(err));
         });
     });

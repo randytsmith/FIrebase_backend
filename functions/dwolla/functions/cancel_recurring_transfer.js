@@ -23,10 +23,10 @@ function cancelRecurringTransfer(userID, transferData) {
              from ${recurData.bank_name} to your Travel Fund. You can contact tripcents support through \
              the “profile” screen of your app.`;
             const bodyDict = {
-                test: message
+                // test: message
             };
             mailer
-                .sendTemplateToUser(userID, 'Dwolla account suspended', '196a1c48-5617-4b25-a7bb-8af3863b5fcc', bodyDict, 'Hey! ', 'Hey! ')
+                .sendTemplateToUser(userID, 'Dwolla account suspended', '196a1c48-5617-4b25-a7bb-8af3863b5fcc', bodyDict, ' ', message)
                 .catch(err => console.error(err));
 
             return ref.update(updates);

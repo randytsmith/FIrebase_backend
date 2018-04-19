@@ -36,22 +36,24 @@ function customerBankTransferFailedWebhook(body) {
                         const date = new Date().toLocaleString();
                         const src = [];
                         const dest = [];
+                        let message = '';
                         if (transfer.type === 'deposit') {
                             src[0] = transfer.bank_name;
                             dest[0] = 'Travel Fund';
+                            message = `Aw shucks! A transfer for ${transfer.amount} failed \
+                                on ${date} from ${src[0]} to ${dest[0]}. For support \
+                                please contact tripcents support through the “profile” \
+                                screen of your app.`;
                         } else {
                             src[0] = 'Travel Fund';
                             dest[0] = transfer.bank_name;
+                            message = `Friendly confirmation email here - your withdrawal for ${transfer.amount} \
+                            from <${src[0]} to ${date[0]} was cancelled on ${date}. If you need anything else, \
+                            please contact tripcents support through the profile screen of your app`;
                         }
-                        const message = `Aw shucks! A transfer for ${transfer.amount} failed \
-                            on ${date} from ${src[0]} to ${dest[0]}. For support \
-                            please contact tripcents support through the “profile” \
-                            screen of your app.`;
-                        const bodyDict = {
-                            test: message[0]
-                        };
+                        const bodyDict = {};
                         mailer
-                            .sendTemplateToUser(userID, 'Transfer failed', '196a1c48-5617-4b25-a7bb-8af3863b5fcc', bodyDict, ' ', ' ')
+                            .sendTemplateToUser(userID, 'Transfer failed', '196a1c48-5617-4b25-a7bb-8af3863b5fcc', bodyDict, ' ', message)
                             .catch(err => console.error(err));
                     });
                     return ref.update(updates);

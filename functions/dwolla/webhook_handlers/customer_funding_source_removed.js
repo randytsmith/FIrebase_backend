@@ -28,11 +28,9 @@ function customerFundingSourceRemoveddWebhook(body) {
             reconnect or link another bank account within the app. For support please contact \
             tripcents support through the “profile” screen of your app.`;
             console.log('declared message');
-            const bodyDict = {
-                test: message
-            };
+            const bodyDict = {};
             mailer
-                .sendTemplateToUser(userID, 'Funding Source Removed!', '196a1c48-5617-4b25-a7bb-8af3863b5fcc', bodyDict, ' ', ' ')
+                .sendTemplateToUser(userID, 'Funding Source Removed!', '196a1c48-5617-4b25-a7bb-8af3863b5fcc', bodyDict, ' ', message)
                 .catch(err => console.error(err));
         });
         return ref.update(updates);

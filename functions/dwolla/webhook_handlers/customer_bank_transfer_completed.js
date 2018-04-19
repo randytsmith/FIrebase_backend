@@ -37,22 +37,23 @@ function customerBankTransferCompletedWebhook(body) {
                         const date = new Date().toLocaleString();
                         const src = [];
                         const dest = [];
+                        let message = '';
                         if (transfer.type === 'deposit') {
                             src[0] = transfer.bank_name;
                             dest[0] = 'Travel Fund';
+                            message = `Hooray, A transfer for ${transfer.amount} was completed \
+                                on ${date} from ${src[0]} to ${dest[0]}. For support \
+                                please contact tripcents support through the “profile” \
+                                screen of your app.`;
                         } else {
                             src[0] = 'Travel Fund';
                             dest[0] = transfer.bank_name;
                         }
-                        const message = `Hooray, A transfer for ${transfer.amount} was completed \
-                            on ${date} from ${src[0]} to ${dest[0]}. For support \
-                            please contact tripcents support through the “profile” \
-                            screen of your app.`;
                         const bodyDict = {
-                            test: message[0]
+                            // test: message
                         };
                         mailer
-                            .sendTemplateToUser(userID, 'Transfer completed', '196a1c48-5617-4b25-a7bb-8af3863b5fcc', bodyDict, ' ', ' ')
+                            .sendTemplateToUser(userID, 'Transfer completed', '196a1c48-5617-4b25-a7bb-8af3863b5fcc', bodyDict, ' ', message)
                             .catch(err => console.error(err));
                     });
                     return ref.update(updates);
