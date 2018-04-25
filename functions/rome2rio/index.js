@@ -28,7 +28,7 @@ function meanBy(array, field) {
  * @param {string} params.oPos lat lng delimited by comma e.g: "37.792,-122.397"
  * @param {string} params.dPos
  */
-function getEstimation(params) {
+function getEstimation(uid, params) {
     const payload = {
         uri: `${config.rome2rio.apiBase}/json/Search`,
         qs: _.extend({}, DEFAULT_FILTERS, params, {
