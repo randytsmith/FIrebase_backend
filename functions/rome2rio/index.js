@@ -25,10 +25,8 @@ function meanBy(array, field) {
 }
 
 /**
- * @param {Number} params.oPos.lat
- * @param {Number} params.oPos.lng
- * @param {Number} params.dPos.lat
- * @param {Number} params.dPos.lng
+ * @param {string} params.oPos lat lng delimited by comma e.g: "37.792,-122.397"
+ * @param {string} params.dPos
  */
 function getEstimation(params) {
     const payload = {
