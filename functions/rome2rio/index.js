@@ -14,16 +14,6 @@ const DEFAULT_FILTERS = {
     noSpecial: true
 };
 
-function meanBy(array, field) {
-    const result = _.meanBy(array, field);
-
-    if (isNaN(result)) {
-        return 0;
-    }
-
-    return result.toFixed(2) * 1;
-}
-
 /**
  * @param {string} params.oPos lat lng delimited by comma e.g: "37.792,-122.397"
  * @param {string} params.dPos
@@ -40,19 +30,26 @@ function getEstimation(uid, params) {
     return request(payload)
     .then(response => {
         const routes = _.get(response, 'routes', []);
-        let prices = [];
+        const results = [];
 
         _.each(routes, route => {
-            prices = prices.concat(route.indicativePrices);
+            _.each(route.segments, segment => {
+                const from = _.get(response, `places.${segment.depPlace}`, '');
+                const to = _.get(response, `places.${segment.arrPlace}`, '');
+
+                results.push({
+                    from,
+                    to,
+                    price: _.get(segment, 'indicativePrices.0.priceLow', 0),
+                    returnPrice: _.get(segment, 'return.0.indicativePrices.0.priceLow', 0),
+                    distance: segment.distance,
+                    transitDuration: segment.transitDuration,
+                    transferDuration: segment.transferDuration
+                });
+            });
         });
 
-        return {
-            price: meanBy(prices, 'price'),
-            priceLow: meanBy(prices, 'priceLow'),
-            priceHigh: meanBy(prices, 'priceHigh'),
-            duration: meanBy(routes, 'totalDuration'),
-            distance: meanBy(routes, 'distance')
-        };
+        return results;
     });
 }
 
