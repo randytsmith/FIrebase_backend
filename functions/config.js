@@ -8,6 +8,7 @@ const fcmConfig = config.fcm || {};
 const plaidConfig = config.plaid || {};
 const sendgridConfig = config.sendgrid || {};
 const rome2rioConfig = config.rome2rio || {};
+const hotwireConfig = config.hotwire || {};
 
 module.exports = {
     plaid: {
@@ -37,5 +38,9 @@ module.exports = {
     rome2rio: {
         apiBase: rome2rioConfig.api_base || 'http://free.rome2rio.com/api/1.4',
         apiKey: rome2rioConfig.api_key || ''
+    },
+    hotwire: {
+        apiBase: hotwireConfig.api_base || 'http://api.hotwire.com',
+        apiKey: hotwireConfig.api_key || ''
     }
 };
