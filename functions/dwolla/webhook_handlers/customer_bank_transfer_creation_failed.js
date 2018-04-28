@@ -34,24 +34,24 @@ function customerBankTransferCreationFailedWebhook(body) {
                     utils.getBankTransfer(customerID, transferID).then(transfer => {
                         console.log('sending email and push notification');
                         // fcm.sendNotificationToUser(userID, 'Transfer created', 'transfer created').catch(err => console.error(err));
-                        const date = new Date().toLocaleString();
+                        const date = transfer.created_at;
                         const src = [];
                         const dest = [];
                         let message = '';
                         if (transfer.type === 'deposit') {
                             src[0] = transfer.bank_name;
-                            dest[0] = 'Travel Fund';
-                            message = `Aw shucks! A transfer for ${transfer.amount} failed \
-                                on ${date} from ${src[0]} to ${dest[0]}. For support \
+                            dest[0] = 'your Travel Fund';
+                            message = `Aw shucks! A transfer for $${transfer.amount} initiated on ${date} \
+                                from ${src[0]} to ${dest[0]} failed. For support \
                                 please contact tripcents support through the “profile” \
                                 screen of your app.`;
                         } else {
-                            src[0] = 'Travel Fund';
+                            src[0] = 'your Travel Fund';
                             dest[0] = transfer.bank_name;
                             message = `Uh oh, know you don’t want to hear this but a withdrawal \
-                            for ${transfer.amount} failed on ${date} from ${src[0]} to ${dest[0]}. Please check \
+                            for $${transfer.amount} initiated on ${date} from ${src[0]} to ${dest[0]} failed. Please check \
                             with your bank. If this doesn’t seem right, feel free to contact \
-                            tripcents support anytime through the profile screen of your app`;
+                            tripcents support anytime through the profile screen of your app.`;
                         }
                         const bodyDict = {};
                         mailer

@@ -34,22 +34,22 @@ function customerBankTransferCreatedWebhook(body) {
                     utils.getBankTransfer(customerID, transferID).then(transfer => {
                         console.log('sending email and push notification');
                         // fcm.sendNotificationToUser(userID, 'Transfer created', 'transfer created').catch(err => console.error(err));
-                        const date = new Date().toLocaleString();
+                        const date = transfer.created_at;
                         const src = [];
                         const dest = [];
                         let message = '';
                         if (transfer.type === 'withdraw') {
-                            src[0] = 'Travel Fund';
+                            src[0] = 'your Travel Fund';
                             dest[0] = transfer.bank_name;
-                            message = `Thought you'd want to know - A withdrawal for ${transfer.amount} \
-                            was initiated on ${date} from ${src[0]} to ${dest[0]}. Withdrawals \
+                            message = `Thought you'd want to know - A withdrawal for $${transfer.amount} \
+                            was initiated on ${date} from your ${src[0]} to ${dest[0]}. Withdrawals \
                             initiated before 5PM EST on business days (excluding bank holidays) \
                             will typically post within 1-3 business days. For help please contact \
                             tripcents support through the “profile” screen of your app.`;
                         } else {
                             src[0] = transfer.bank_name;
-                            dest[0] = 'Travel Fund';
-                            message = `Just keeping you in the loop - A transfer for ${transfer.amount} was created \
+                            dest[0] = 'your Travel Fund';
+                            message = `Just keeping you in the loop - A transfer for $${transfer.amount} was initated \
                                 on ${date} from ${src[0]} to ${dest[0]}. A few more transfers and you’ll be choosing your \
                                 seats for your flight to paradise (hopefully it’s not a middle seat). For \
                                 support please contact tripcents support through the “profile” screen of your app.`;

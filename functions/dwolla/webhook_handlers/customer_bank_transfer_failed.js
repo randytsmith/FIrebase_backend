@@ -39,17 +39,18 @@ function customerBankTransferFailedWebhook(body) {
                         let message = '';
                         if (transfer.type === 'deposit') {
                             src[0] = transfer.bank_name;
-                            dest[0] = 'Travel Fund';
-                            message = `Aw shucks! A transfer for ${transfer.amount} failed \
-                                on ${date} from ${src[0]} to ${dest[0]}. For support \
+                            dest[0] = 'your Travel Fund';
+                            message = `Aw shucks! A transfer for $${transfer.amount} initiated on ${date} \
+                                from ${src[0]} to ${dest[0]} failed. For support \
                                 please contact tripcents support through the “profile” \
                                 screen of your app.`;
                         } else {
-                            src[0] = 'Travel Fund';
+                            src[0] = 'your Travel Fund';
                             dest[0] = transfer.bank_name;
-                            message = `Friendly confirmation email here - your withdrawal for ${transfer.amount} \
-                            from <${src[0]} to ${date[0]} was cancelled on ${date}. If you need anything else, \
-                            please contact tripcents support through the profile screen of your app`;
+                            message = `Uh oh, know you don’t want to hear this but a withdrawal \
+                            for $${transfer.amount} initiated on ${date} from ${src[0]} to ${dest[0]} failed. Please check \
+                            with your bank. If this doesn’t seem right, feel free to contact \
+                            tripcents support anytime through the profile screen of your app.`;
                         }
                         const bodyDict = {};
                         mailer

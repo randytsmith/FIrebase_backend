@@ -18,8 +18,14 @@ function cancelRecurringTransfer(userID, transferData) {
             updates[`dwolla/users^recurring_transfers/${userID}`] = false;
             console.log('sending email and push notification');
             // fcm.sendNotificationToUser(userID, 'Recurring transfer cancelled', 'Recurring transfer cancelled').catch(err => console.error(err));
+            let suffix = '';
+            if (processDate === '1') {
+                suffix = 'st';
+            } else {
+                suffix = 'th';
+            }
             const message = `Just a heads up! You’ve cancelled a recurring \
-            transfer for ${recurData.amount} to be transfered on the ${processDate} of each month,\
+            transfer for $${recurData.amount} to be transfered on the ${processDate}${suffix} of each month,\
              from ${recurData.bank_name} to your Travel Fund. You can contact tripcents support through \
              the “profile” screen of your app.`;
             const bodyDict = {

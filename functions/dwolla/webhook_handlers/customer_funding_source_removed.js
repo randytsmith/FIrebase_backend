@@ -22,7 +22,7 @@ function customerFundingSourceRemoveddWebhook(body) {
             // fcm.sendNotificationToUser(userID, 'Funding source verified', 'Funding source verified').catch(err => console.error(err));
             const date = new Date().toLocaleString();
             const message = `Here's a friendly confirmation email! You’ve unlinked your ${fundData.bank_name} \
-            account ${fundData.name} on new \
+            account ${fundData.name} on \
             ${date}. \
             If you'd like to set up savings or transfer saved funds, please \
             reconnect or link another bank account within the app. For support please contact \

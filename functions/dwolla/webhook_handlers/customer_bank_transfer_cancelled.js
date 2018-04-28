@@ -34,22 +34,22 @@ function customerBankTransferCancelledWebhook(body) {
                     utils.getBankTransfer(customerID, transferID).then(transfer => {
                         console.log('sending email and push notification');
                         // fcm.sendNotificationToUser(userID, 'Transfer created', 'transfer created').catch(err => console.error(err));
-                        const date = new Date().toLocaleString();
+                        const date = transfer.created_at;
                         const src = [];
                         const dest = [];
                         let message = '';
                         if (transfer.type === 'deposit') {
                             src[0] = transfer.bank_name;
-                            dest[0] = 'Travel Fund';
-                            message = `Just letting you know, a transfer for ${transfer.amount} was cancelled \
-                               on ${date} from ${src[0]} to ${dest[0]}. For support \
+                            dest[0] = 'your Travel Fund';
+                            message = `Just letting you know, a transfer for $${transfer.amount} initiated on ${date} \
+                               from ${src[0]} to ${dest[0]} was cancelled. For support \
                                please contact tripcents support through the “profile” \
                                screen of your app.`;
                         } else {
-                            src[0] = 'Travel Fund';
+                            src[0] = 'your Travel Fund';
                             dest[0] = transfer.bank_name;
                             message = `Friendly confirmation email here - your withdrawal \
-                            for ${transfer.amount} from ${src[0]} to ${dest[0]} was cancelled on ${date}. \
+                            for $${transfer.amount} initated on ${date} from ${src[0]} to ${dest[0]} was cancelled. \
                             If you need anything else, please contact tripcents support through the profile screen of your app.`;
                         }
                         const bodyDict = {
