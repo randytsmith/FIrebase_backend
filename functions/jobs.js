@@ -1,6 +1,8 @@
 const APIError = require('./common/ApiError');
 const ref = require('./ref');
 const dwollaJobs = require('./dwolla/functions');
+const rome2rio = require('./rome2rio');
+const hotwire = require('./hotwire');
 
 const jobs = {
     success_test: dwollaJobs.dwolla_success_test,
@@ -13,7 +15,9 @@ const jobs = {
     make_dwolla_transfer: dwollaJobs.make_dwolla_transfer,
     make_dwolla_withdraw: dwollaJobs.make_dwolla_withdraw,
     cancel_dwolla_transfer: dwollaJobs.cancel_dwolla_transfer,
-    test_plaid: dwollaJobs.test_plaid
+    test_plaid: dwollaJobs.test_plaid,
+    get_flight_estimation: rome2rio.getEstimation,
+    get_hotel_deals: hotwire.getHotelDeals
 };
 
 function respondSuccess(key, result) {
