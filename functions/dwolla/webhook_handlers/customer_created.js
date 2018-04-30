@@ -13,7 +13,7 @@ const utils = require('../utils');
 function customerCreatedWebhook(body) {
     const customerID = body.resourceId;
     const updates = {};
-    updates[`dwolla/customers/${customerID}/status`] = 'verified';
+    updates[`dwolla/customers/${customerID}/status`] = 'created';
     updates[`dwolla/customers/${customerID}/balance`] = 0;
     utils.getUserID(customerID).then(userID => {
         console.log('sending email and push notification');
