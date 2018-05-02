@@ -20,7 +20,11 @@ function customerVerificationDocumentUploadedWebhook(body) {
         console.log('sending email and push notification');
         // fcm.sendNotificationToUser(userID, 'Funding source verified', 'Funding source verified').catch(err => console.error(err));
         const date = new Date().toLocaleString();
-        const message = '';
+        const message =
+            'Awesome, your verification document was uploaded \
+        successfully! We’ll let you know when you’ve been approved. If you \
+        need anything else, please contact tripcents support through the profile \
+        screen of your app.';
         const bodyDict = {
             // test: message
         };
