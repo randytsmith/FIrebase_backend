@@ -34,7 +34,7 @@ function customerCreatedWebhook(body) {
                 Terms of Service and Privacy Policy. Thanks! -The Tripcents team';
             const bodyDict = {};
             mailer
-                .sendTemplateToUser(userID, 'Dwolla account verified!', '196a1c48-5617-4b25-a7bb-8af3863b5fcc', bodyDict, ' ', message)
+                .sendTemplateToUser(userID, 'Customer account created', '196a1c48-5617-4b25-a7bb-8af3863b5fcc', bodyDict, ' ', message)
                 .catch(err => console.error(err));
         });
         return ref.update(updates);
