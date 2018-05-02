@@ -17,6 +17,8 @@ function customerCreatedWebhook(body) {
         let status = '';
         if (customer_info.status === 'verified') {
             status = 'verified';
+        } else if (customer_info.status === 'retry') {
+            status = 'retry';
         } else {
             status = 'created';
         }
