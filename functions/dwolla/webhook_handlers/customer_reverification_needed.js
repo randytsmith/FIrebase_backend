@@ -15,7 +15,7 @@ function customerReverificationNeededWebhook(body) {
         console.log('sending email and push notification');
         // fcm.sendNotificationToUser(userID, 'You are deactivated', 'Your dwolla account has been deactivated').catch(err => console.error(err));
         const message =
-            'Your account has requires reverification! You can \
+            'Your account requires reverification! You can \
         resubmit your information or upload the required documents through the \
         app. Please contact tripcents support through the “profile” screen of your app.';
         const bodyDict = {
