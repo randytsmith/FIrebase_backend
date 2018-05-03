@@ -4,7 +4,7 @@ const config = require('../../config');
 const { getAPIClient } = require('../api');
 const crypto = require('crypto');
 const mailer = require('../../mailer');
-// const fcm = require('../../fcm');
+const fcm = require('../../fcm');
 const utils = require('../utils');
 
 /**
@@ -33,7 +33,6 @@ function customerBankTransferCompletedWebhook(body) {
                     updates[`dwolla/customers/${customerID}/balance`] = bal;
                     utils.getBankTransfer(customerID, transferID).then(transfer => {
                         console.log('sending email and push notification');
-                        // fcm.sendNotificationToUser(userID, 'Transfer created', 'transfer created').catch(err => console.error(err));
                         const date = transfer.created_at;
                         const src = [];
                         const dest = [];
@@ -56,8 +55,11 @@ function customerBankTransferCompletedWebhook(body) {
                         const bodyDict = {
                             // test: message
                         };
+
                         mailer
                             .sendTemplateToUser(userID, 'Transfer completed', '196a1c48-5617-4b25-a7bb-8af3863b5fcc', bodyDict, ' ', message)
+                            .catch(err => console.error(err));
+                        fcm.sendNotificationToUser(userID, 'Transfer completed', 'transfer created')
                             .catch(err => console.error(err));
                     });
                     return ref.update(updates);
