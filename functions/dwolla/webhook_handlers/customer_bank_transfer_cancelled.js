@@ -41,7 +41,7 @@ function customerBankTransferCancelledWebhook(body) {
                         if (transfer.type === 'deposit') {
                             src[0] = transfer.bank_name;
                             dest[0] = 'your Travel Fund';
-                            message = `Just letting you know, a transfer for $${transfer.amount} initiated on ${date} \
+                            message = `Just letting you know, a transfer for $${transfer.amount} initiated on ${utils.getHumanTime(date)} \
                                from ${src[0]} to ${dest[0]} was cancelled. For support \
                                please contact tripcents support through the “profile” \
                                screen of your app.`;
@@ -49,7 +49,7 @@ function customerBankTransferCancelledWebhook(body) {
                             src[0] = 'your Travel Fund';
                             dest[0] = transfer.bank_name;
                             message = `Friendly confirmation email here - your withdrawal \
-                            for $${transfer.amount} initated on ${date} from ${src[0]} to ${dest[0]} was cancelled. \
+                            for $${transfer.amount} initated on ${utils.getHumanTime(date)} from ${src[0]} to ${dest[0]} was cancelled. \
                             If you need anything else, please contact tripcents support through the profile screen of your app.`;
                         }
                         const bodyDict = {

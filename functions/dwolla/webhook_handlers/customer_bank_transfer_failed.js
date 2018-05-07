@@ -40,7 +40,7 @@ function customerBankTransferFailedWebhook(body) {
                         if (transfer.type === 'deposit') {
                             src[0] = transfer.bank_name;
                             dest[0] = 'your Travel Fund';
-                            message = `Aw shucks! A transfer for $${transfer.amount} initiated on ${date} \
+                            message = `Aw shucks! A transfer for $${transfer.amount} initiated on ${utils.getHumanTime(date)} \
                                 from ${src[0]} to ${dest[0]} failed. For support \
                                 please contact tripcents support through the “profile” \
                                 screen of your app.`;
@@ -48,7 +48,7 @@ function customerBankTransferFailedWebhook(body) {
                             src[0] = 'your Travel Fund';
                             dest[0] = transfer.bank_name;
                             message = `Uh oh, know you don’t want to hear this but a withdrawal \
-                            for $${transfer.amount} initiated on ${date} from ${src[0]} to ${dest[0]} failed. Please check \
+                            for $${transfer.amount} initiated on ${utils.getHumanTime(date)} from ${src[0]} to ${dest[0]} failed. Please check \
                             with your bank. If this doesn’t seem right, feel free to contact \
                             tripcents support anytime through the profile screen of your app.`;
                         }

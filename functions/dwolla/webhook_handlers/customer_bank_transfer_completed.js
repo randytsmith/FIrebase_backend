@@ -40,14 +40,14 @@ function customerBankTransferCompletedWebhook(body) {
                         if (transfer.type === 'deposit') {
                             src[0] = transfer.bank_name;
                             dest[0] = 'your Travel Fund';
-                            message = `Hooray, A transfer for $${transfer.amount} initiated on ${date} \
+                            message = `Hooray, A transfer for $${transfer.amount} initiated on ${utils.getHumanTime(date)} \
                                 from ${src[0]} to ${dest[0]} was completed. For support \
                                 please contact tripcents support through the “profile” \
                                 screen of your app.`;
                         } else {
                             src[0] = 'your Travel Fund';
                             dest[0] = transfer.bank_name;
-                            message = `Ka-Ching! Your withdrawal for $${transfer.amount} initiated on ${date} \
+                            message = `Ka-Ching! Your withdrawal for $${transfer.amount} initiated on ${utils.getHumanTime(date)} \
                             from ${src[0]} to ${dest[0]} was completedÍ. If you \
                             need anything else, please contact tripcents support through \
                             the profile screen of your app.`;
