@@ -12,7 +12,7 @@ const utils = require('../utils');
 function customerVerificationDocumentNeededWebhook(body) {
     const customerID = body.resourceId;
     const updates = {};
-    updates[`dwolla/customers/${customerID}/status`] = 'created';
+    updates[`dwolla/customers/${customerID}/status`] = 'document';
     utils.getUserID(customerID).then(userID => {
         console.log('sending email and push notification');
         // fcm.sendNotificationToUser(userID, 'Funding source verified', 'Funding source verified').catch(err => console.error(err));

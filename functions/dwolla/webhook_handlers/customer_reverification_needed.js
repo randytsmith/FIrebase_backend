@@ -10,7 +10,7 @@ const utils = require('../utils');
 function customerReverificationNeededWebhook(body) {
     const customerID = body.resourceId;
     const updates = {};
-    updates[`dwolla/customers/${customerID}/status`] = 'reverification';
+    updates[`dwolla/customers/${customerID}/status`] = 'retry';
     utils.getUserID(customerID).then(userID => {
         console.log('sending email and push notification');
         // fcm.sendNotificationToUser(userID, 'You are deactivated', 'Your dwolla account has been deactivated').catch(err => console.error(err));
