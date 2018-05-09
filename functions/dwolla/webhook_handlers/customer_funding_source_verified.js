@@ -24,7 +24,7 @@ function customerFundingSourceVerifiedWebhook(body) {
             const message = `Thanks for connecting your bank account! Good news, it’s verified \
             and ready for some saving action. Your ${fundData.bank_name} \
             account ${fundData.name} has been verified on \
-            ${date}. \
+            ${utils.getHumanTime(date)}. \
             For support please contact tripcents support \
             through the “profile” screen of your app.`;
             const bodyDict = {

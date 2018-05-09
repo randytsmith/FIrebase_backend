@@ -24,7 +24,7 @@ function addDwollaCustomer(userID, customerData) {
                     .child('dwolla')
                     .child('customers')
                     .child(customerID)
-                    .set({ customerData, href: custUrl, status: 'pending' }),
+                    .set({ href: custUrl, status: 'pending' }),
                 ref
                     .child('dwolla')
                     .child('users^customers')

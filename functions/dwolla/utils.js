@@ -1,3 +1,4 @@
+const moment = require('moment');
 const ref = require('../ref');
 
 function getTransfer(customerID, transferID) {
@@ -96,6 +97,10 @@ function getFundingSourceData(customerID, fundID) {
         .then(snap => snap.val());
 }
 
+function getHumanTime(timestamp) {
+    return moment(Math.abs(timestamp), 'x').utcOffset(-240).format('MM/DD/YYYY HH:mm A');
+}
+
 module.exports = {
     getTransfer,
     getBankTransfer,
@@ -106,5 +111,6 @@ module.exports = {
     getRecurringTransferData,
     getCustomerHoldingID,
     getRecurringTransferStatus,
-    getFundingSourceData
+    getFundingSourceData,
+    getHumanTime
 };
