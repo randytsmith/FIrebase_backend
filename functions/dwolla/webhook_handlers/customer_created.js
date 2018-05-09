@@ -15,12 +15,10 @@ function customerCreatedWebhook(body) {
     const customerID = body.resourceId;
     return getCustomer(customerID).then(customer_info => {
         let status = '';
-        if (customer_info.status === 'verified') {
-            status = 'verified';
-        } else if (customer_info.status === 'retry') {
-            status = 'retry';
-        } else {
+        if (customer_info.status === 'pending') {
             status = 'created';
+        } else {
+            status = customer_info.status;
         }
         const updates = {};
         updates[`dwolla/customers/${customerID}/status`] = status;
