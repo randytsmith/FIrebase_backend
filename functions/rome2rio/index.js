@@ -40,8 +40,12 @@ function getEstimation(uid, params) {
                 results.push({
                     from,
                     to,
+                    priceMedian: _.get(segment, 'indicativePrices.0.price', 0),
                     price: _.get(segment, 'indicativePrices.0.priceLow', 0),
+                    priceHigh: _.get(segment, 'indicativePrices.0.priceHigh', 0),
+                    returnPriceMedian: _.get(segment, 'return.0.indicativePrices.0.price', 0),
                     returnPrice: _.get(segment, 'return.0.indicativePrices.0.priceLow', 0),
+                    returnPriceHigh: _.get(segment, 'return.0.indicativePrices.0.priceHigh', 0),
                     distance: segment.distance,
                     transitDuration: segment.transitDuration,
                     transferDuration: segment.transferDuration
