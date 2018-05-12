@@ -8,6 +8,7 @@ const jobs = {
     success_test: dwollaJobs.dwolla_success_test,
     error_test: dwollaJobs.dwolla_error_test,
     add_dwolla_customer: dwollaJobs.add_dwolla_customer,
+    update_dwolla_customer: dwollaJobs.update_dwolla_customer,
     add_recurring_transfer: dwollaJobs.add_recurring_transfer,
     cancel_recurring_transfer: dwollaJobs.cancel_recurring_transfer,
     link_funding_source: dwollaJobs.link_funding_source,
