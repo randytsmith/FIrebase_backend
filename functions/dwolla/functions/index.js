@@ -9,9 +9,11 @@ const dwolla_success_test = require('./dwolla_success_test');
 const dwolla_error_test = require('./dwolla_error_test');
 const cancel_dwolla_transfer = require('./cancel_dwolla_transfer');
 const test_plaid = require('./test_plaid.js');
+const update_dwolla_customer = require('./update_dwolla_customer');
 
 module.exports = {
     add_dwolla_customer,
+    update_dwolla_customer,
     make_dwolla_transfer,
     make_dwolla_withdraw,
     link_funding_source,
