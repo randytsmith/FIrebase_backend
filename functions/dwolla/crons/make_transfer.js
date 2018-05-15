@@ -56,7 +56,8 @@ function makeTransfer(customerID, processDate, transferData) {
                     status: 'pending',
                     type: 'deposit',
                     created_at: -new Date().valueOf(),
-                    updated_at: -new Date().valueOf()
+                    updated_at: -new Date().valueOf(),
+                    bank_name: transferData.bank_name
                 })
                 .then(() => transferUrl);
         });
