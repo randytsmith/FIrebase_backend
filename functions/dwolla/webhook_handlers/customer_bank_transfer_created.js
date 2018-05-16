@@ -49,8 +49,8 @@ function customerBankTransferCreatedWebhook(body) {
                         } else {
                             src[0] = transfer.bank_name;
                             dest[0] = 'your Travel Fund';
-                            message = `Just keeping you in the loop - A transfer for $${transfer.amount} was initated \
-                                on ${utils.getHumanTime(date)} from ${src[0]} to ${dest[0]}. A few more transfers and you’ll be choosing your \
+                            message = `Just keeping you in the loop - A transfer for $${transfer.amount} was initated on ${utils.getHumanTime(date)} \
+                            from ${src[0]} to ${dest[0]}. A few more transfers and you’ll be choosing your \
                                 seats for your flight to paradise (hopefully it’s not a middle seat). For \
                                 support please contact tripcents support through the “profile” screen of your app.`;
                         }
@@ -58,8 +58,7 @@ function customerBankTransferCreatedWebhook(body) {
                         mailer
                             .sendTemplateToUser(userID, 'Transfer created', '196a1c48-5617-4b25-a7bb-8af3863b5fcc', bodyDict, ' ', message)
                             .catch(err => console.error(err));
-                        fcm.sendNotificationToUser(userID, 'Transfer created', message)
-                          .catch(err => console.error(err));
+                        fcm.sendNotificationToUser(userID, 'Transfer created', message).catch(err => console.error(err));
                     });
                     return ref.update(updates);
                 });
