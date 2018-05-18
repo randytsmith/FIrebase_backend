@@ -42,7 +42,7 @@ function customerBankTransferCreatedWebhook(body) {
                             src[0] = 'your Travel Fund';
                             dest[0] = transfer.bank_name;
                             message = `Thought you'd want to know - A withdrawal for $${transfer.amount} \
-                            was initiated on ${utils.getHumanTime(date)} from your ${src[0]} to ${dest[0]}. Withdrawals \
+                            was initiated on ${utils.getHumanTime(date)} from ${src[0]} to ${dest[0]}. Withdrawals \
                             initiated before 5PM EST on business days (excluding bank holidays) \
                             will typically post within 1-3 business days. For help please contact \
                             tripcents support through the “profile” screen of your app.`;
