@@ -37,8 +37,8 @@ function addRecurringTransfer(userID, transferData) {
                     suffix = 'th';
                 }
                 console.log('sending email and push notification');
-                const message = `Nice! You’ve scheduled a recurring transfer for $\
-                 ${transferData.amount} to be transfered on the ${transferData.process_date}${suffix} of each month, from \
+                const message = `Nice! You’ve scheduled a recurring transfer for $${transferData.amount}.00\
+                 to be transfered on the ${transferData.process_date}${suffix} of each month, from \
                  ${transferData.bank_name} to your Travel Fund. Just sit back, relax, and watch \
                  as your travel fund fulfills its potential. You can contact tripcents support \
                  through the “profile” screen of your app.`;
