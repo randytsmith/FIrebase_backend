@@ -28,7 +28,7 @@ function getPlaidClient() {
         '5a426772efe64e7803074efe',
         'ea58ff5c626d54dc5b473c633899a7',
         '19af20e429a5573d9336a7da329f03',
-        plaid.environments.production
+        plaid.environments.sandbox
     );
     console.log('got plaid client');
     return plaidClient;
