@@ -16,6 +16,8 @@ const jobs = {
     make_dwolla_transfer: dwollaJobs.make_dwolla_transfer,
     make_dwolla_withdraw: dwollaJobs.make_dwolla_withdraw,
     cancel_dwolla_transfer: dwollaJobs.cancel_dwolla_transfer,
+    add_round_up: dwollaJobs.add_round_up,
+    remove_round_up: dwollaJobs.remove_round_up,
     test_plaid: dwollaJobs.test_plaid,
     get_flight_estimation: rome2rio.getEstimation,
     get_hotel_deals: hotwire.getHotelDeals

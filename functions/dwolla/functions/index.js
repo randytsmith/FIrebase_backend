@@ -10,6 +10,8 @@ const dwolla_error_test = require('./dwolla_error_test');
 const cancel_dwolla_transfer = require('./cancel_dwolla_transfer');
 const test_plaid = require('./test_plaid.js');
 const update_dwolla_customer = require('./update_dwolla_customer');
+const add_round_up = require('./add_round_up');
+const remove_round_up = require('./remove_round_up');
 
 module.exports = {
     add_dwolla_customer,
@@ -23,5 +25,7 @@ module.exports = {
     cancel_dwolla_transfer,
     dwolla_success_test,
     dwolla_error_test,
-    test_plaid
+    test_plaid,
+    add_round_up,
+    remove_round_up
 };

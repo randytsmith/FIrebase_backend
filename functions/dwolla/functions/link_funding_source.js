@@ -19,7 +19,7 @@ function linkFundingSource(userID, fundData) {
             return plaid_client.exchangePublicToken(fundData.publicToken).then(plaid_res1 => {
                 const access_token = plaid_res1.access_token;
                 return plaid_client.createProcessorToken(access_token, acctId, 'dwolla').then(plaid_res2 => {
-                    return [plaid_res2.processor_token, customerID];
+                    return [plaid_res2.processor_token, customerID, access_token];
                 });
             });
         })
@@ -32,7 +32,7 @@ function linkFundingSource(userID, fundData) {
                     name: fundData.metaData.account.name
                 };
                 return dwolla_client.post(customerUrl, requestBody).then(dwolla_res => {
-                    return [dwolla_res.headers.get('location'), customerId];
+                    return [dwolla_res.headers.get('location'), customerId, dwolla_info[2]];
                 });
             });
         })
@@ -47,7 +47,9 @@ function linkFundingSource(userID, fundData) {
                     status: 'pending',
                     bank_name: fundData.metaData.institution.name,
                     ins_id: fundData.metaData.institution.institution_id,
-                    name: fundData.metaData.account.name
+                    name: fundData.metaData.account.name,
+                    plaid_account_id: acctId,
+                    plaid_access_token: fundInfo[2]
                 })
                 .then(() => fundId);
         });
