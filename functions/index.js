@@ -11,6 +11,7 @@ const {
 const makeTransfer = require('./dwolla/crons/make_transfer');
 const updateBalance = require('./dwolla/crons/update_holding_bal');
 const processTransfers = require('./dwolla/crons/process_transfers');
+const roundUp = require('./dwolla/crons/round_up');
 
 exports.dwollaWebhook = functions.https.onRequest(requestHandler(handleWebhook));
 exports.startDwollaWebhook = functions.https.onRequest(requestHandler(startDwollaWebhookHandler));
@@ -32,4 +33,9 @@ exports.recurringTransfer = functions.https.onRequest((req, res) => {
 exports.updateHoldingBalance = functions.https.onRequest((req, res) => {
     updateBalance();
     res.status(200).send('Successfully triggered');
+});
+
+exports.roundUp = functions.https.onRequest((req, res) => {
+    roundUp();
+    res.status(200).send('Successfully triggered roundup');
 });
