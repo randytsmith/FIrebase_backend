@@ -7,6 +7,8 @@ const fcm = require('../../fcm');
  * subscribes user for round up
  * @param {string} userID
  * @param {string} roundupData.fund fund source id
+ * @param {number} roundupData.additional_dollar
+ * @param {number} roundUpData.recurring_plan
  * @returns {Promise<string>}
  */
 function addRoundUp(userID, roundUpData) {
@@ -16,7 +18,9 @@ function addRoundUp(userID, roundUpData) {
             update[`dwolla/round_up/${userID}`] = {
                 customer_id: customerID,
                 fund_source_id: roundUpData.fund,
-                bank_name: roundUpData.bank_name
+                bank_name: roundUpData.bank_name,
+                additional_dollar: roundUpData.additional_dollar || 0,
+                recurring_plan: roundUpData.recurring_plan || 'weekly'
             };
 
             const message = 'Nice! You have subscribed to round-up feature!';

@@ -1,6 +1,6 @@
 const moment = require('moment');
 const ref = require('../../ref');
-const { getCustomerID, getCustomerHoldingID } = require('../utils');
+const { getCustomerID, getCustomerHoldingID, getFundingSourceData } = require('../utils');
 const { getAPIClient, getPlaidClient } = require('../api');
 
 const config = require('../../config');
@@ -10,10 +10,16 @@ function getHoldingID(userID) {
     .then(customerID => getCustomerHoldingID(customerID));
 }
 
+function getFundSource(userID, fundSourceID) {
+    return getCustomerID(userID)
+    .then(customerID => getFundingSourceData(customerID, fundSourceID));
+}
+
 /**
  * processes round up of all plaid transactions during the week
  * @param {string} userID
  * @param {string} roundUpData.plaid_account_id
+ * @param {string} roundUpData.additional_dollar
  * @returns {Promise<string>}
  */
 function processRoundUp(userID, roundUpData) {
@@ -33,7 +39,7 @@ function processRoundUp(userID, roundUpData) {
                 }
 
                 return total;
-            }, 0);
+            }, roundUpData.additional_dollar);
 
             return getAPIClient()
             .then(dwolla => {
@@ -62,7 +68,7 @@ function processRoundUp(userID, roundUpData) {
         });
 }
 
-function checkAllUsersRoundUp() {
+function checkAllUsersRoundUp(recurringPlan) {
     return ref.child('dwolla')
         .child('round_up')
         .once('value')
@@ -72,9 +78,15 @@ function checkAllUsersRoundUp() {
 
             return Object.keys(data).reduce((lastPromise, userID) => {
                 const customerData = data[userID];
+                if (recurringPlan !== customerData.recurring_plan) {
+                    console.log(`Skipping because ${recurringPlan} !== ${customerData.recurring_plan}`);
+                    return lastPromise;
+                }
+
                 return lastPromise
-                    .then(() => {
-                        return processRoundUp(userID, customerData);
+                    .then(() => getFundSource(userID, customerData.fund_source_id))
+                    .then(fundSourceData => {
+                        return processRoundUp(userID, Object.assign({}, customerData, fundSourceData));
                     })
                     .then(sum => {
                         console.log(`Successfully finished round up ${sum} for ${userID}`);

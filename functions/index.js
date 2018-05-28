@@ -36,6 +36,6 @@ exports.updateHoldingBalance = functions.https.onRequest((req, res) => {
 });
 
 exports.roundUp = functions.https.onRequest((req, res) => {
-    roundUp();
-    res.status(200).send('Successfully triggered roundup');
+    roundUp(req.query.recurring_plan);
+    res.status(200).send(`Successfully triggered roundup for ${req.query.recurring_plan}`);
 });
