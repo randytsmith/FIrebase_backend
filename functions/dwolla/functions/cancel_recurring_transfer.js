@@ -19,7 +19,7 @@ function cancelRecurringTransfer(userID, transferData) {
             console.log('sending email and push notification');
             // fcm.sendNotificationToUser(userID, 'Recurring transfer cancelled', 'Recurring transfer cancelled').catch(err => console.error(err));
             let suffix = '';
-            if (processDate === '1') {
+            if (processDate === 1) {
                 suffix = 'st';
             } else {
                 suffix = 'th';
@@ -32,7 +32,7 @@ function cancelRecurringTransfer(userID, transferData) {
                 // test: message
             };
             mailer
-                .sendTemplateToUser(userID, 'Dwolla account suspended', '196a1c48-5617-4b25-a7bb-8af3863b5fcc', bodyDict, ' ', message)
+                .sendTemplateToUser(userID, 'Cancelled Recurring Transfer', '196a1c48-5617-4b25-a7bb-8af3863b5fcc', bodyDict, ' ', message)
                 .catch(err => console.error(err));
 
             return ref.update(updates);

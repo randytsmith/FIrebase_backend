@@ -48,7 +48,7 @@ function customerBankTransferCompletedWebhook(body) {
                             src[0] = 'your Travel Fund';
                             dest[0] = transfer.bank_name;
                             message = `Ka-Ching! Your withdrawal for $${transfer.amount} initiated on ${utils.getHumanTime(date)} \
-                            from ${src[0]} to ${dest[0]} was completedÍ. If you \
+                            from ${src[0]} to ${dest[0]} was completed. If you \
                             need anything else, please contact tripcents support through \
                             the profile screen of your app.`;
                         }
@@ -59,8 +59,7 @@ function customerBankTransferCompletedWebhook(body) {
                         mailer
                             .sendTemplateToUser(userID, 'Transfer completed', '196a1c48-5617-4b25-a7bb-8af3863b5fcc', bodyDict, ' ', message)
                             .catch(err => console.error(err));
-                        fcm.sendNotificationToUser(userID, 'Transfer completed', 'transfer created')
-                            .catch(err => console.error(err));
+                        fcm.sendNotificationToUser(userID, 'Transfer completed', 'transfer created').catch(err => console.error(err));
                     });
                     return ref.update(updates);
                 });
