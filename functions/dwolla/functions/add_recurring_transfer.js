@@ -22,7 +22,7 @@ function addRecurringTransfer(userID, transferData) {
             })
             .then(() => {
                 const updates2 = {};
-                updates2[`dwolla/recurring_transfers^customers/${transferData.process_data}/${customerID}`] = {
+                updates2[`dwolla/recurring_transfers^customers/${transferData.process_date}/${customerID}`] = {
                     fund_source_id: transferData.fund,
                     amount: transferData.amount,
                     status: 'active',
