@@ -29,6 +29,18 @@ function saveTransaction(customerID, transaction, charge, additionalDollar) {
         }));
 }
 
+function saveRoundUp(customerID, today, startDate, endDate) {
+    return ref
+        .child('dwolla')
+        .child('customers^roundup_history')
+        .child(customerID)
+        .child(today)
+        .set({
+            start_date: startDate,
+            end_date: endDate
+        });
+}
+
 /**
  * processes round up of all plaid transactions during the week
  * @param {string} userID
@@ -69,6 +81,8 @@ function processRoundUp(userID, roundUpData, recurringPlan) {
             if (!sum || !resp.transactions.length) {
                 return Promise.resolve('No transaction to make round up');
             }
+
+            saveRoundUp(roundUpData.customer_id, moment().format('YYYY-MM-DD'), startDate, endDate);
 
             return getAPIClient()
             .then(dwolla => {
