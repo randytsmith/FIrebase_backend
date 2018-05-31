@@ -24,7 +24,7 @@ function addRoundUp(userID, roundUpData) {
 
         const message = `YAS! Your automatic round up savings have been set \
             up successfully. We’ll now save the change from rounding up your \
-            purchases to the nearest ${roundupData.additional_dollar}. \
+            purchases to the nearest ${roundUpData.additional_dollar}. \
             Want to hear the breakdown? No? Well too bad - here’s how it works, \
             we calculate the spare change from your roundUpData.bank_name transactions and \
             transfer it to your Travel Fund ${roundUpData.recurring_plan}`;
