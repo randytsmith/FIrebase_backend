@@ -15,6 +15,20 @@ function getFundSource(userID, fundSourceID) {
     .then(customerID => getFundingSourceData(customerID, fundSourceID));
 }
 
+function saveTransaction(customerID, transaction, charge, additionalDollar) {
+    return ref
+        .child('dwolla')
+        .child('customers^plaid_transactions')
+        .child(customerID)
+        .child(transaction.date)
+        .child(transaction.transaction_id)
+        .set(Object.assign({}, transaction, {
+            charge,
+            additionalDollar,
+            timestamp: new Date().valueOf()
+        }));
+}
+
 /**
  * processes round up of all plaid transactions during the week
  * @param {string} userID
@@ -22,28 +36,43 @@ function getFundSource(userID, fundSourceID) {
  * @param {string} roundUpData.additional_dollar
  * @returns {Promise<string>}
  */
-function processRoundUp(userID, roundUpData) {
+function processRoundUp(userID, roundUpData, recurringPlan) {
     const plaid = getPlaidClient();
-    const startDate = moment().startOf('week').format('YYYY-MM-DD');
-    const endDate = moment().endOf('week').format('YYYY-MM-DD');
+    const dayMap = {
+        weekly: 7,
+        'bi-weekly': 14,
+        monthly: 30
+    };
 
-    if (roundUpData.plaid_access_token) {
+    const days = dayMap[recurringPlan];
+    const startDate = moment().subtract(days, 'days').startOf('day').format('YYYY-MM-DD');
+    const endDate = moment().endOf('day').format('YYYY-MM-DD');
+
+    if (!roundUpData.plaid_access_token) {
         return Promise.reject(new Error('Plaid access token not found'));
     }
 
     return plaid.getTransactions(roundUpData.plaid_access_token, startDate, endDate)
-        .then(transactions => {
-            const sum = transactions.reduce((total, transaction) => {
+        .then(resp => {
+            const sum = resp.transactions.reduce((total, transaction) => {
                 if (transaction.amount > 0) {
-                    return Math.ceil(transaction.amount) - transaction.amount;
+                    const amount = (Math.ceil(transaction.amount) - transaction.amount) + (roundUpData.additional_dollar || 0);
+
+                    saveTransaction(roundUpData.customer_id, transaction, amount, (roundUpData.additional_dollar || 0));
+
+                    return total + amount;
                 }
 
                 return total;
-            }, roundUpData.additional_dollar);
+            }, 0);
+
+            if (!sum || !resp.transactions.length) {
+                return Promise.resolve('No transaction to make round up');
+            }
 
             return getAPIClient()
             .then(dwolla => {
-                return getHoldingID()
+                return getHoldingID(userID)
                 .then(holdingID => {
                     const requestBody = {
                         _links: {
@@ -86,7 +115,7 @@ function checkAllUsersRoundUp(recurringPlan) {
                 return lastPromise
                     .then(() => getFundSource(userID, customerData.fund_source_id))
                     .then(fundSourceData => {
-                        return processRoundUp(userID, Object.assign({}, customerData, fundSourceData));
+                        return processRoundUp(userID, Object.assign({}, customerData, fundSourceData), recurringPlan);
                     })
                     .then(sum => {
                         console.log(`Successfully finished round up ${sum} for ${userID}`);
