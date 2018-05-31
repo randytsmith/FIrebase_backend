@@ -42,8 +42,8 @@ function respondError(key, error) {
 
 function runJob(event) {
     console.log(event);
-    const request = event.data.val();
-    const key = event.params.requestID;
+    const request = event._data;
+    const key = event._path.split('/').pop();
     const name = request.name;
     console.log(`Got request(${key}): ${name}`);
     console.log('Parameters: ', request.parameters);
