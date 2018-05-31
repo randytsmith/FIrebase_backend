@@ -41,6 +41,7 @@ function respondError(key, error) {
 }
 
 function runJob(event) {
+    console.log(event);
     const request = event.data.val();
     const key = event.params.requestID;
     const name = request.name;
