@@ -19,7 +19,7 @@ function cancelRecurringTransfer(userID, transferData) {
             console.log('sending email and push notification');
             // fcm.sendNotificationToUser(userID, 'Recurring transfer cancelled', 'Recurring transfer cancelled').catch(err => console.error(err));
             let suffix = '';
-            if (processDate === 1) {
+            if (+processDate === 1) {
                 suffix = 'st';
             } else {
                 suffix = 'th';

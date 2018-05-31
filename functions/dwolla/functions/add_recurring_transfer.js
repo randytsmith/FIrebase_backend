@@ -35,7 +35,7 @@ function addRecurringTransfer(userID, transferData) {
                 updates2[`dwolla/customers^recurring_transfers/${customerID}`] = transferData.process_date;
                 updates2[`dwolla/users^recurring_transfers/${userID}`] = true;
                 let suffix = '';
-                if (transferData.process_date === 1) {
+                if (+transferData.process_date === 1) {
                     suffix = 'st';
                 } else {
                     suffix = 'th';
