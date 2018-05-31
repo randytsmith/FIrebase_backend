@@ -26,8 +26,8 @@ function addRoundUp(userID, roundUpData) {
             up successfully. We’ll now save the change from rounding up your \
             purchases to the nearest ${roundUpData.additional_dollar}. \
             Want to hear the breakdown? No? Well too bad - here’s how it works, \
-            we calculate the spare change from your roundUpData.bank_name transactions and \
-            transfer it to your Travel Fund ${roundUpData.recurring_plan}`;
+            we calculate the spare change from your ${roundUpData.bank_name} transactions and \
+            transfer it to your Travel Fund ${roundUpData.recurring_plan}.`;
 
         mailer.sendTemplateToUser(userID, 'Subscribed to round-up', '196a1c48-5617-4b25-a7bb-8af3863b5fcc', {}, ' ', message);
         fcm.sendNotificationToUser(userID, 'Subscribed to round-up', message);
