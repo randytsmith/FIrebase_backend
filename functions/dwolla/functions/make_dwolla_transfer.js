@@ -39,6 +39,7 @@ function makeDwollaTransfer(userID, transferData) {
             updates[`dwolla/users^bank_transfers/${userID}`] = transfer;
             return ref.update(updates).then(() => {
                 console.log(`bank name is ${transferData.bank_name}`);
+
                 return ref
                     .child('dwolla')
                     .child('customers^bank_transfers')

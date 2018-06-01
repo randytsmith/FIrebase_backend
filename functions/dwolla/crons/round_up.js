@@ -2,17 +2,15 @@ const moment = require('moment');
 const ref = require('../../ref');
 const { getCustomerID, getCustomerHoldingID, getFundingSourceData } = require('../utils');
 const { getAPIClient, getPlaidClient } = require('../api');
-
+const mailer = require('../../mailer');
 const config = require('../../config');
 
 function getHoldingID(userID) {
-    return getCustomerID(userID)
-    .then(customerID => getCustomerHoldingID(customerID));
+    return getCustomerID(userID).then(customerID => getCustomerHoldingID(customerID));
 }
 
 function getFundSource(userID, fundSourceID) {
-    return getCustomerID(userID)
-    .then(customerID => getFundingSourceData(customerID, fundSourceID));
+    return getCustomerID(userID).then(customerID => getFundingSourceData(customerID, fundSourceID));
 }
 
 function saveTransaction(customerID, transaction, charge, additionalDollar) {
@@ -22,11 +20,13 @@ function saveTransaction(customerID, transaction, charge, additionalDollar) {
         .child(customerID)
         .child(transaction.date)
         .child(transaction.transaction_id)
-        .set(Object.assign({}, transaction, {
-            charge,
-            additionalDollar,
-            timestamp: new Date().valueOf()
-        }));
+        .set(
+            Object.assign({}, transaction, {
+                charge,
+                additionalDollar,
+                timestamp: new Date().valueOf()
+            })
+        );
 }
 
 function saveRoundUp(customerID, today, startDate, endDate) {
@@ -57,62 +57,97 @@ function processRoundUp(userID, roundUpData, recurringPlan) {
     };
 
     const days = dayMap[recurringPlan];
-    const startDate = moment().subtract(days, 'days').startOf('day').format('YYYY-MM-DD');
-    const endDate = moment().endOf('day').format('YYYY-MM-DD');
+    const startDate = moment()
+        .subtract(days, 'days')
+        .startOf('day')
+        .format('YYYY-MM-DD');
+    const endDate = moment()
+        .endOf('day')
+        .format('YYYY-MM-DD');
 
     if (!roundUpData.plaid_access_token) {
         return Promise.reject(new Error('Plaid access token not found'));
     }
 
-    return plaid.getTransactions(roundUpData.plaid_access_token, startDate, endDate)
-        .then(resp => {
-            const sum = resp.transactions.reduce((total, transaction) => {
-                if (transaction.amount > 0) {
-                    const amount = (Math.ceil(transaction.amount) - transaction.amount) + (roundUpData.additional_dollar || 0);
+    return plaid.getTransactions(roundUpData.plaid_access_token, startDate, endDate).then(resp => {
+        const sum = resp.transactions.reduce((total, transaction) => {
+            if (transaction.amount > 0) {
+                const amount = Math.ceil(transaction.amount) - transaction.amount + (roundUpData.additional_dollar || 0);
 
-                    saveTransaction(roundUpData.customer_id, transaction, amount, (roundUpData.additional_dollar || 0));
+                saveTransaction(roundUpData.customer_id, transaction, amount, roundUpData.additional_dollar || 0);
 
-                    return total + amount;
-                }
-
-                return total;
-            }, 0);
-
-            if (!sum || !resp.transactions.length) {
-                return Promise.resolve('No transaction to make round up');
+                return total + amount;
             }
 
-            saveRoundUp(roundUpData.customer_id, moment().format('YYYY-MM-DD'), startDate, endDate);
+            return total;
+        }, 0);
 
-            return getAPIClient()
-            .then(dwolla => {
-                return getHoldingID(userID)
-                .then(holdingID => {
-                    const requestBody = {
-                        _links: {
-                            source: {
-                                href: `${config.dwolla.url}/funding-sources/${roundUpData.fund_source_id}`
-                            },
-                            destination: {
-                                href: `${config.dwolla.url}/funding-sources/${holdingID}`
-                            }
+        if (!sum || !resp.transactions.length) {
+            return Promise.resolve('No transaction to make round up');
+        }
+
+        saveRoundUp(roundUpData.customer_id, moment().format('YYYY-MM-DD'), startDate, endDate);
+
+        return getAPIClient().then(dwolla => {
+            return getHoldingID(userID).then(holdingID => {
+                const requestBody = {
+                    _links: {
+                        source: {
+                            href: `${config.dwolla.url}/funding-sources/${roundUpData.fund_source_id}`
                         },
-                        amount: {
-                            currency: 'USD',
-                            value: sum
+                        destination: {
+                            href: `${config.dwolla.url}/funding-sources/${holdingID}`
                         }
-                    };
+                    },
+                    amount: {
+                        currency: 'USD',
+                        value: sum
+                    }
+                };
 
-                    console.log(requestBody);
-
-                    return dwolla.post('transfers', requestBody);
+                console.log(requestBody);
+                return dwolla.post('transfers', requestBody).then(res => {
+                    const transferUrl = res.headers.get('location');
+                    const transferId = transferUrl.substr(transferUrl.lastIndexOf('/') + 1);
+                    const updates = {};
+                    updates[`dwolla/users^bank_transfers/${userID}`] = transferId;
+                    return ref
+                        .update(updates)
+                        .then(() => {
+                            console.log(`bank name is ${roundUpData.bank_name}`);
+                            return ref
+                                .child('dwolla')
+                                .child('customers^bank_transfers')
+                                .child(roundUpData.customer_id)
+                                .child(transferId)
+                                .set({
+                                    amount: sum,
+                                    status: 'pending',
+                                    type: 'round-up',
+                                    created_at: -new Date().valueOf(),
+                                    updated_at: -new Date().valueOf(),
+                                    bank_name: roundUpData.bank_name,
+                                    account_name: roundUpData.account_name
+                                });
+                        })
+                        .then(() => {
+                            const message = `More money, more travel! Your automatic round up \
+                                savings of ${sum}, \
+                                have been transferred to your Travel Fund. It’s now ok to start \
+                                daydreaming about your time off, for real though, go on ahead and dream because you’re making it happen!`;
+                            mailer
+                                .sendTemplateToUser(userID, 'Round Up Processed', '196a1c48-5617-4b25-a7bb-8af3863b5fcc', {}, ' ', message)
+                                .catch(err => console.error(err));
+                        });
                 });
             });
         });
+    });
 }
 
 function checkAllUsersRoundUp(recurringPlan) {
-    return ref.child('dwolla')
+    return ref
+        .child('dwolla')
         .child('round_up')
         .once('value')
         .then(snap => snap.val())

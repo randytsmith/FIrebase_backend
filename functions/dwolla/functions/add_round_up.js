@@ -19,7 +19,8 @@ function addRoundUp(userID, roundUpData) {
             fund_source_id: roundUpData.fund,
             bank_name: roundUpData.bank_name,
             additional_dollar: roundUpData.additional_dollar || 0,
-            recurring_plan: roundUpData.recurring_plan || 'weekly'
+            recurring_plan: roundUpData.recurring_plan || 'weekly',
+            account_name: roundUpData.account_name
         };
 
         const message = `YAS! Your automatic round up savings have been set \
