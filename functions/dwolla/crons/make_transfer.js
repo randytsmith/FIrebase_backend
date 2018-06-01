@@ -57,7 +57,8 @@ function makeTransfer(customerID, processDate, transferData) {
                     type: 'deposit',
                     created_at: -new Date().valueOf(),
                     updated_at: -new Date().valueOf(),
-                    bank_name: transferData.bank_name
+                    bank_name: transferData.bank_name,
+                    account_name: transferData.account_name
                 })
                 .then(() => transferUrl);
         });

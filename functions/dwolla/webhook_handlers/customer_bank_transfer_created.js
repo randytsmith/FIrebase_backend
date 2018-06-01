@@ -33,6 +33,9 @@ function customerBankTransferCreatedWebhook(body) {
                     updates[`dwolla/customers/${customerID}/balance`] = bal;
                     utils.getBankTransfer(customerID, transferID).then(transfer => {
                         console.log('sending email and push notification');
+                        if (!transfer.bank_name) {
+                            throw new Error(`No dwolla holding account for ${customerID}'`);
+                        }
 
                         const date = transfer.created_at;
                         const src = [];
