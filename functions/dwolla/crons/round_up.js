@@ -146,7 +146,7 @@ function processRoundUp(userID, roundUpData, recurringPlan) {
     });
 }
 
-function checkAllUsersRoundUp(recurringPlan) {
+function checkAllUsersRoundUp() {
     return ref
         .child('dwolla')
         .child('round_up')
@@ -168,7 +168,7 @@ function checkAllUsersRoundUp(recurringPlan) {
                 return lastPromise
                     .then(() => getFundSource(userID, customerData.fund_source_id))
                     .then(fundSourceData => {
-                        return processRoundUp(userID, Object.assign({}, customerData, fundSourceData), recurringPlan);
+                        return processRoundUp(userID, Object.assign({}, customerData, fundSourceData), customerData.recurring_plan);
                     })
                     .then(sum => {
                         console.log(`Successfully finished round up ${sum} for ${userID}`);
