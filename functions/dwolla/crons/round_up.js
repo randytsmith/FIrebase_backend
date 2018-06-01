@@ -5,6 +5,12 @@ const { getAPIClient, getPlaidClient } = require('../api');
 const mailer = require('../../mailer');
 const config = require('../../config');
 
+const dayMap = {
+    weekly: 7,
+    'bi-weekly': 14,
+    monthly: 30
+};
+
 function getHoldingID(userID) {
     return getCustomerID(userID).then(customerID => getCustomerHoldingID(customerID));
 }
@@ -50,11 +56,6 @@ function saveRoundUp(customerID, today, startDate, endDate) {
  */
 function processRoundUp(userID, roundUpData, recurringPlan) {
     const plaid = getPlaidClient();
-    const dayMap = {
-        weekly: 7,
-        'bi-weekly': 14,
-        monthly: 30
-    };
 
     const days = dayMap[recurringPlan];
     const startDate = moment()
@@ -72,7 +73,7 @@ function processRoundUp(userID, roundUpData, recurringPlan) {
     return plaid.getTransactions(roundUpData.plaid_access_token, startDate, endDate).then(resp => {
         const sum = resp.transactions.reduce((total, transaction) => {
             if (transaction.amount > 0) {
-                const amount = Math.ceil(transaction.amount) - transaction.amount + (roundUpData.additional_dollar || 0);
+                const amount = (Math.ceil(transaction.amount) - transaction.amount) + (roundUpData.additional_dollar || 0);
 
                 saveTransaction(roundUpData.customer_id, transaction, amount, roundUpData.additional_dollar || 0);
 
@@ -156,8 +157,11 @@ function checkAllUsersRoundUp(recurringPlan) {
 
             return Object.keys(data).reduce((lastPromise, userID) => {
                 const customerData = data[userID];
-                if (recurringPlan !== customerData.recurring_plan) {
-                    console.log(`Skipping because ${recurringPlan} !== ${customerData.recurring_plan}`);
+                const days = dayMap[customerData.recurring_plan];
+                const daysPassed = moment().diff(roundUpData.create_date, 'days');
+
+                if (!(daysPassed > 0 && daysPassed % days === 0)) {
+                    console.log(`Skipping - recurring days/passed - ${days}/${daysPassed}`);
                     return lastPromise;
                 }
 

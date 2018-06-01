@@ -1,3 +1,4 @@
+const moment = require('moment');
 const ref = require('../../ref');
 const { getCustomerID } = require('../utils');
 const mailer = require('../../mailer');
@@ -20,7 +21,8 @@ function addRoundUp(userID, roundUpData) {
             bank_name: roundUpData.bank_name,
             additional_dollar: roundUpData.additional_dollar || 0,
             recurring_plan: roundUpData.recurring_plan || 'weekly',
-            account_name: roundUpData.account_name
+            account_name: roundUpData.account_name,
+            create_date: moment().format('YYYY-MM-DD')
         };
 
         const message = `YAS! Your automatic round up savings have been set \
