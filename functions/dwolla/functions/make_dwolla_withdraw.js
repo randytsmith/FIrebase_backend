@@ -50,7 +50,8 @@ function makeDwollaWithdraw(userID, transferData) {
                         created_at: -new Date().valueOf(),
                         updated_at: -new Date().valueOf(),
                         bank_name: transferData.bank_name,
-                        account_name: transferData.account_name
+                        account_name: transferData.account_name,
+                        transfer_type: 'one-time'
                     })
                     .then(() => transfer);
             });

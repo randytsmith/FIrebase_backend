@@ -73,7 +73,7 @@ function processRoundUp(userID, roundUpData, recurringPlan) {
     return plaid.getTransactions(roundUpData.plaid_access_token, startDate, endDate).then(resp => {
         const sum = resp.transactions.reduce((total, transaction) => {
             if (transaction.amount > 0) {
-                const amount = (Math.ceil(transaction.amount) - transaction.amount) + (roundUpData.additional_dollar || 0);
+                const amount = Math.ceil(transaction.amount) - transaction.amount + (roundUpData.additional_dollar || 0);
 
                 saveTransaction(roundUpData.customer_id, transaction, amount, roundUpData.additional_dollar || 0);
 
@@ -128,7 +128,8 @@ function processRoundUp(userID, roundUpData, recurringPlan) {
                                     created_at: -new Date().valueOf(),
                                     updated_at: -new Date().valueOf(),
                                     bank_name: roundUpData.bank_name,
-                                    account_name: roundUpData.account_name
+                                    account_name: roundUpData.account_name,
+                                    transfer_type: 'round-up'
                                 });
                         })
                         .then(() => {

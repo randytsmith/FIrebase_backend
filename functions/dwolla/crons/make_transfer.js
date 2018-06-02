@@ -58,7 +58,7 @@ function makeTransfer(customerID, processDate, transferData) {
                     created_at: -new Date().valueOf(),
                     updated_at: -new Date().valueOf(),
                     bank_name: transferData.bank_name,
-                    account_name: transferData.account_name
+                    transfer_type: 'recurring'
                 })
                 .then(() => transferUrl);
         });
