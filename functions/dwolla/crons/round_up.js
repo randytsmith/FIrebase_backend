@@ -159,7 +159,7 @@ function checkAllUsersRoundUp() {
             return Object.keys(data).reduce((lastPromise, userID) => {
                 const customerData = data[userID];
                 const days = dayMap[customerData.recurring_plan];
-                const daysPassed = moment().diff(roundUpData.create_date, 'days');
+                const daysPassed = moment().diff(customerData.create_date, 'days');
 
                 if (!(daysPassed > 0 && daysPassed % days === 0)) {
                     console.log(`Skipping - recurring days/passed - ${days}/${daysPassed}`);
